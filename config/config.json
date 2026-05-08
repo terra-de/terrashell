@@ -1,0 +1,21 @@
+{
+  "bar": {},
+  "appearance": {
+    "shadow": {
+      "opacity": 0.22
+    }
+  },
+  "motion": {},
+  "popouts": {
+    "volume": {
+      "sound": "off",
+      "suppressWhenMicActive": true
+    }
+  },
+  "controlCenter": {
+    "wallpaper": {}
+  },
+  "appDrawer": {},
+  "notifications": {},
+  "whichKey": {}
+}

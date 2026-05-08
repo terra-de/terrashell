@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# terrashell — launch the Terra DE Quickshell configuration
+set -euo pipefail
+
+TERRASHELL_DIR="/usr/share/terrashell"
+
+# User config override
+if [ -f "$HOME/.config/terrashell/config.json" ]; then
+    export TERRA_CONFIG_PATH="$HOME/.config/terrashell/config.json"
+fi
+
+exec qs -p "$TERRASHELL_DIR/shell.qml" "$@"
