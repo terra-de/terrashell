@@ -45,10 +45,11 @@ QtObject {
     }
 
     function rebuildBinds(binds) {
-        if (!Array.isArray(binds) || binds.length === 0) {
+        const normalized = WhichKeyTree.normalizeBinds(binds);
+        if (normalized.length === 0) {
             return;
         }
-        root.tree = WhichKeyTree.buildTree(binds);
+        root.tree = WhichKeyTree.buildTree(normalized);
         root.path = [];
         root.refreshView();
     }
