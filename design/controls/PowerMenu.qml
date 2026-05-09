@@ -117,7 +117,7 @@ Item {
                         font.pixelSize: Math.round(parent.height * 0.5)
                         font.weight: Font.Medium
                         color: isConfirm
-                            ? TTheme.Palette.color("on_c0")
+                            ? TTheme.Palette.color("on_c4")
                             : TTheme.Palette.color("standard")
                         verticalAlignment: Text.AlignVCenter
                         Layout.preferredWidth: implicitWidth
@@ -129,7 +129,7 @@ Item {
                         font.weight: Config.Appearance.fontWeight
                         font.pixelSize: Config.Appearance.fontSizeMedium
                         color: isConfirm
-                            ? TTheme.Palette.color("on_c0")
+                            ? TTheme.Palette.color("on_c4")
                             : TTheme.Palette.color("standard")
                         verticalAlignment: Text.AlignVCenter
                         Layout.fillWidth: true

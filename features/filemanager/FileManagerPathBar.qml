@@ -85,7 +85,7 @@ Rectangle {
         visible: false
         text: Services.FileManagerService.currentFolder.slice(7)
         color: TTheme.Palette.color("muted")
-        selectedTextColor: TTheme.Palette.color("on_c0")
+        selectedTextColor: TTheme.Palette.color("on_c4")
         selectionColor: TTheme.Palette.color("c4")
         font.family: Config.Appearance.fontFamily
         font.weight: Config.Appearance.fontWeight

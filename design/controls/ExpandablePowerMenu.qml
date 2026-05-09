@@ -27,7 +27,7 @@ Item {
     readonly property bool pressed: toggleArea.pressed
     readonly property color activeColor: TTheme.Palette.color("c4")
     readonly property color inactiveColor: TTheme.Palette.color("high")
-    readonly property color activeTextColor: TTheme.Palette.color("on_c0")
+    readonly property color activeTextColor: TTheme.Palette.color("on_c4")
     readonly property color inactiveTextColor: TTheme.Palette.color("standard")
     readonly property color inactiveIconColor: TTheme.Palette.color("muted")
     property real revealHeight: root.expanded ? root.expandedContentHeight : 0

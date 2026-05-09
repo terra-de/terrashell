@@ -40,7 +40,7 @@ Rectangle {
 
         anchors.centerIn: parent
         text: Services.KeyboardService.visible ? "keyboard_hide" : "keyboard"
-        color: Services.KeyboardService.visible ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("standard")
+        color: Services.KeyboardService.visible ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("standard")
         font.family: root.iconFont
         font.pixelSize: root.iconSize
         font.weight: Font.Medium

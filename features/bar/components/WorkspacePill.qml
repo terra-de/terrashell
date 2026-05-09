@@ -31,7 +31,7 @@ Item {
             anchors.centerIn: parent
             text: root.label
             color: active
-                ? TTheme.Palette.color("on_c0")
+                ? TTheme.Palette.color("on_c4")
                 : TTheme.Palette.color("standard")
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight

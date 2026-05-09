@@ -88,7 +88,7 @@ Rectangle {
 
                     Text {
                         text: modelData.icon
-                        color: active ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("muted")
+                        color: active ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("muted")
                         font.family: Config.Appearance.iconFontFamily
                         font.pixelSize: 20
                         font.weight: Font.Medium
@@ -97,7 +97,7 @@ Rectangle {
 
                     Text {
                         text: modelData.name
-                        color: active ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("muted")
+                        color: active ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("muted")
                         font.family: Config.Appearance.fontFamily
                         font.weight: Config.Appearance.fontWeight
                         font.pixelSize: Config.Appearance.fontSizeMedium

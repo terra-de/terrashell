@@ -225,7 +225,7 @@ Primitives.SlideOutPanelWindow {
                         text: root.state?.query ?? ""
                         clip: true
                         color: TTheme.Palette.color("standard")
-                        selectedTextColor: TTheme.Palette.color("on_c0")
+                        selectedTextColor: TTheme.Palette.color("on_c4")
                         selectionColor: TTheme.Palette.color("c4")
                         font.family: Config.Appearance.fontFamily
                         font.weight: Config.Appearance.fontWeight
@@ -382,7 +382,9 @@ Primitives.SlideOutPanelWindow {
                                         Text {
                                             anchors.centerIn: parent
                                             text: tileRoot.itemData ? (tileRoot.itemData.glyph || "") : ""
-                                            color: TTheme.Palette.color("standard")
+                                            color: tileRoot.selected
+                                                ? TTheme.Palette.color("on_c1")
+                                                : TTheme.Palette.color("standard")
                                             font.family: root.glyphFontFamily
                                             font.pixelSize: root.glyphSize
                                             font.weight: Font.Normal

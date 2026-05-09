@@ -46,7 +46,7 @@ Rectangle {
         font.family: root.iconFont
         font.pixelSize: root.iconSize
         font.weight: Font.Medium
-        color: root.active ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("standard")
+        color: root.active ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("standard")
     }
 
     Rectangle {

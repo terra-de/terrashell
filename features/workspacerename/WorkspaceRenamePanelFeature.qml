@@ -141,7 +141,7 @@ Primitives.SlideOutPanelWindow {
                         anchors.rightMargin: 8
                         clip: true
                         color: TTheme.Palette.color("standard")
-                        selectedTextColor: TTheme.Palette.color("on_c0")
+                        selectedTextColor: TTheme.Palette.color("on_c4")
                         selectionColor: TTheme.Palette.color("c4")
                         font.family: Config.Appearance.fontFamily
                         font.pixelSize: Config.Appearance.fontSizeMedium

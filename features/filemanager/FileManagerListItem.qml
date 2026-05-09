@@ -44,7 +44,7 @@ Rectangle {
 
         Text {
             text: root.iconName
-            color: root.selected ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("muted")
+            color: root.selected ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("muted")
             font.family: Config.Appearance.iconFontFamily
             font.pixelSize: 22
             font.weight: Font.Medium
@@ -53,7 +53,7 @@ Rectangle {
 
         Text {
             text: root.fileName
-            color: root.selected ? TTheme.Palette.color("on_c0") : TTheme.Palette.color("muted")
+            color: root.selected ? TTheme.Palette.color("on_c4") : TTheme.Palette.color("muted")
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight
             font.pixelSize: Config.Appearance.fontSizeMedium

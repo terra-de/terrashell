@@ -418,7 +418,9 @@ Primitives.SlideOutPanelWindow {
 
                                         Text {
                                             text: tileRoot.appName
-                                            color: TTheme.Palette.color("standard")
+                                            color: tileRoot.selected
+                                                ? TTheme.Palette.color("on_c1")
+                                                : TTheme.Palette.color("standard")
                                             font.family: Config.Appearance.fontFamily
                                             font.weight: tileRoot.selected ? Font.DemiBold : Config.Appearance.fontWeight
                                             font.pixelSize: Config.Appearance.fontSizeSmall

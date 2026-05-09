@@ -150,7 +150,7 @@ PanelWindow {
                     anchors.leftMargin: 12
                     anchors.rightMargin: 12
                     color: TTheme.Palette.color("standard")
-                    selectedTextColor: TTheme.Palette.color("on_c0")
+                    selectedTextColor: TTheme.Palette.color("on_c4")
                     selectionColor: TTheme.Palette.color("c4")
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Config.Appearance.fontSizeMedium
@@ -186,7 +186,7 @@ PanelWindow {
                     anchors.leftMargin: 12
                     anchors.rightMargin: 12
                     color: TTheme.Palette.color("standard")
-                    selectedTextColor: TTheme.Palette.color("on_c0")
+                    selectedTextColor: TTheme.Palette.color("on_c4")
                     selectionColor: TTheme.Palette.color("c4")
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Config.Appearance.fontSizeMedium
@@ -254,7 +254,7 @@ PanelWindow {
                     Text {
                         anchors.centerIn: parent
                         text: root.state.submitting ? "Saving..." : "Continue"
-                        color: TTheme.Palette.color("on_c0")
+                        color: TTheme.Palette.color("on_c4")
                         font.family: Config.Appearance.fontFamily
                         font.pixelSize: Config.Appearance.fontSizeMedium
                         font.weight: Font.Medium
