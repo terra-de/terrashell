@@ -39,7 +39,7 @@ Rectangle {
         : (hovered
             ? TTheme.Palette.color("c1")
             : (occupied
-                ? TTheme.Palette.color("front")
+                ? TTheme.Palette.color("high")
                 : TTheme.Palette.color("base")))
 
     Behavior on implicitWidth {

@@ -28,7 +28,7 @@ Item {
     readonly property bool pauseOnHover: Config.Config.notifications?.popup?.pauseOnHover ?? true
     readonly property color surfaceColor: root.critical
         ? TTheme.Palette.color("error")
-        : TTheme.Palette.color("front")
+        : TTheme.Palette.color("high")
     readonly property color onSurfaceColor: root.critical
         ? TTheme.Palette.color("on_error")
         : TTheme.Palette.color("standard")

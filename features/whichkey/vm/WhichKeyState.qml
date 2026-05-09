@@ -35,12 +35,22 @@ QtObject {
         root.enabled = normalized.enabled;
         root.closeOnUnknown = normalized.closeOnUnknown;
         root.title = normalized.title;
-        root.tree = WhichKeyTree.buildTree(normalized.binds);
+        // Don't set binds from config — they come from keys.json via rebuildBinds()
+        // defaultBinds() in WhichKeyTree.js serves as bootstrap until file loads
         root.path = [];
         root.refreshView();
         if (!root.enabled) {
             root.open = false;
         }
+    }
+
+    function rebuildBinds(binds) {
+        if (!Array.isArray(binds) || binds.length === 0) {
+            return;
+        }
+        root.tree = WhichKeyTree.buildTree(binds);
+        root.path = [];
+        root.refreshView();
     }
 
     function openLeader() {

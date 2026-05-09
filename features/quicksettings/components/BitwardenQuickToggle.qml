@@ -24,8 +24,8 @@ Item {
     readonly property bool enabledState: !root.busy && !root.loggedOut
     readonly property bool active: root.unlocked
     readonly property color activeColor: TTheme.Palette.color("c0")
-    readonly property color inactiveColor: TTheme.Palette.color("front")
-    readonly property color disabledColor: TTheme.Palette.color("front")
+    readonly property color inactiveColor: TTheme.Palette.color("high")
+    readonly property color disabledColor: TTheme.Palette.color("high")
     readonly property color activeTextColor: TTheme.Palette.color("on_c0")
     readonly property color inactiveTextColor: TTheme.Palette.color("standard")
     readonly property color inactiveIconColor: TTheme.Palette.color("muted")

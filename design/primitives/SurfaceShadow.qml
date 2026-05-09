@@ -15,7 +15,7 @@ Item {
     required property Item source
 
     property bool enabled: Config.Appearance.shadowEnabled
-    property color shadowColor: TTheme.Palette.color("back")
+    property color shadowColor: TTheme.Palette.color("bottom")
     property real blur: Config.Appearance.shadowBlur
     property real shadowOpacityAmount: Config.Appearance.shadowOpacity
     property real offsetX: 0

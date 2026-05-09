@@ -20,7 +20,7 @@ Rectangle {
     readonly property int iconSize: Math.max(16, Math.round(root.barHeight * 0.5))
 
     radius: Config.Appearance.radiusMedium
-    color: Services.KeyboardService.visible ? TTheme.Palette.color("c0") : TTheme.Palette.color("front")
+    color: Services.KeyboardService.visible ? TTheme.Palette.color("c0") : TTheme.Palette.color("high")
 
     implicitWidth: iconItem.implicitWidth + root.horizontalPadding * 2
     implicitHeight: Utils.Bar.widgetHeight(root.barHeight, iconItem.implicitHeight + root.verticalPadding * 2)

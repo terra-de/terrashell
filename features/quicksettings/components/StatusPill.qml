@@ -21,7 +21,7 @@ Rectangle {
     required property var viewModel
 
     radius: Config.Appearance.radiusMedium
-    color: TTheme.Palette.color("front")
+    color: TTheme.Palette.color("high")
 
     PwObjectTracker {
         objects: [root.viewModel.defaultSink]

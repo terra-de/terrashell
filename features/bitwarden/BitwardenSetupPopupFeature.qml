@@ -139,7 +139,7 @@ PanelWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.inputHeight
                 radius: Config.Appearance.radiusMedium
-                color: TTheme.Palette.color("front")
+                color: TTheme.Palette.color("high")
                 border.width: 1
                 border.color: TTheme.Palette.color("outline")
 
@@ -175,7 +175,7 @@ PanelWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.inputHeight
                 radius: Config.Appearance.radiusMedium
-                color: TTheme.Palette.color("front")
+                color: TTheme.Palette.color("high")
                 border.width: 1
                 border.color: TTheme.Palette.color("outline")
 
@@ -225,7 +225,7 @@ PanelWindow {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.buttonHeight
                     radius: Config.Appearance.radiusMedium
-                    color: TTheme.Palette.color("front")
+                    color: TTheme.Palette.color("high")
                     opacity: root.state.submitting ? 0.5 : 1
 
                     Text {

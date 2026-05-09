@@ -34,7 +34,7 @@ Primitives.SlideOutPanelWindow {
     readonly property int panelOpenDurationMs: Config.Motion.shellDuration
     readonly property int panelCloseDurationMs: Config.Motion.shortDuration
     readonly property color surfaceColor: TTheme.Palette.color("base")
-    readonly property color sectionColor: TTheme.Palette.color("front")
+    readonly property color sectionColor: TTheme.Palette.color("high")
     readonly property int sectionHeight: drawerRows * drawerTileHeight
         + Math.max(0, drawerRows - 1) * drawerTileSpacing
     readonly property int panelHeight: contentPadding
@@ -263,7 +263,7 @@ Primitives.SlideOutPanelWindow {
                                             Layout.preferredWidth: delegateRoot.bindLabelIsIcon ? 34 : 28
                                             Layout.preferredHeight: delegateRoot.bindLabelIsIcon ? 24 : 22
                                             radius: 6
-                                            color: TTheme.Palette.color("front")
+                                            color: TTheme.Palette.color("high")
                                             border.width: 1
                                             border.color: TTheme.Palette.color("outline")
 

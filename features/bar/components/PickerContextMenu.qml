@@ -99,7 +99,7 @@ Item {
             x: Math.max(0, parent.width - root.rightMargin - width)
             y: -root.menuHeight
             radius: Config.Appearance.radiusMedium
-            color: TTheme.Palette.color("front")
+            color: TTheme.Palette.color("high")
             border.width: 1
             border.color: TTheme.Palette.color("outline")
 

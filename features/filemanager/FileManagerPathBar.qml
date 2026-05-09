@@ -13,7 +13,7 @@ import "../../services" as Services
 Rectangle {
     id: root
 
-    color: TTheme.Palette.color("front")
+    color: TTheme.Palette.color("high")
     radius: Config.Appearance.radiusSmall
     height: 42
 

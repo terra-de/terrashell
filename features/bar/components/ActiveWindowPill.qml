@@ -46,7 +46,7 @@ Item {
         id: pill
 
         radius: Config.Appearance.radiusMedium
-        color: TTheme.Palette.color("front")
+        color: TTheme.Palette.color("high")
 
         implicitWidth: contentRow.implicitWidth + root.horizontalPadding * 2
         implicitHeight: root.barHeight

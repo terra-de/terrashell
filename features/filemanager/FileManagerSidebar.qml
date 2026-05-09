@@ -14,7 +14,7 @@ import "../../services/parsers/FileManagerIconMap.js" as IconMap
 Rectangle {
     id: root
 
-    color: TTheme.Palette.color("front")
+    color: TTheme.Palette.color("high")
     radius: Config.Appearance.radiusMedium
 
     readonly property var shortcuts: [

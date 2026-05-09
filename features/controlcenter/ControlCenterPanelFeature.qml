@@ -36,7 +36,7 @@ Primitives.SlideOutPanelWindow {
     readonly property int panelOpenDurationMs: Config.Motion.shellDuration
     readonly property int panelCloseDurationMs: Config.Motion.shortDuration
     readonly property color surfaceColor: TTheme.Palette.color("base")
-    readonly property color sectionColor: TTheme.Palette.color("front")
+    readonly property color sectionColor: TTheme.Palette.color("high")
 
     open: root.state.open
     closeDurationMs: root.panelCloseDurationMs

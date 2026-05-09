@@ -1,37 +1,3 @@
-function defaultBinds() {
-    return [
-        { keys: "<enter>", description: "App drawer", command: "qs ipc call appdrawer toggle", icon: "apps" },
-        { keys: "p", description: "Power", command: "tlgui power", icon: "power_settings_new" },
-        { keys: "w", description: "Window", icon: "web_asset" },
-        { keys: "wf", description: "Fullscreen", command: "hyprctl dispatch fullscreen", icon: "fullscreen" },
-        { keys: "wh", description: "Toggle floating", command: "hyprctl dispatch togglefloating", icon: "picture_in_picture_alt" },
-        { keys: "wp", description: "Toggle pseudo", command: "hyprctl dispatch pseudo", icon: "splitscreen" },
-        { keys: "wd", description: "Discord special workspace", command: "hyprctl dispatch togglespecialworkspace discord", icon: "forum" },
-        { keys: "wo", description: "OBS special workspace", command: "hyprctl dispatch togglespecialworkspace obsstudio", icon: "videocam" },
-        { keys: "l", description: "Layout", icon: "dashboard" },
-        { keys: "ls", description: "Toggle split", command: "hyprctl dispatch togglesplit", icon: "call_split" },
-        { keys: "lr", description: "Move to root", command: "hyprctl dispatch layoutmsg movetoroot", icon: "account_tree" },
-        { keys: "lp", description: "Swap split", command: "hyprctl dispatch layoutmsg swapsplit", icon: "swap_horiz" },
-        { keys: "li", description: "Pin window", command: "hyprctl dispatch pin", icon: "push_pin" },
-        { keys: "u", description: "Utilities", icon: "build" },
-        { keys: "ud", description: "Dictation", icon: "keyboard_voice" },
-        { keys: "uds", description: "Start dictation", command: "nerd-dictation begin --simulate-input-tool=WTYPE", icon: "keyboard_voice" },
-        { keys: "ude", description: "End dictation", command: "nerd-dictation end", icon: "mic_off" },
-        { keys: "uw", description: "Wallpaper", icon: "wallpaper" },
-        { keys: "uws", description: "Skip wallpaper", command: "sh ~/.config/hypr/wallcycle.sh skip", icon: "wallpaper" },
-        { keys: "uwr", description: "Remove wallpaper", command: "sh ~/.config/hypr/wallcycle.sh skip --rm", icon: "delete" },
-        { keys: "uc", description: "Color picker", command: "hyprpicker | wl-copy -n", icon: "colorize" },
-        { keys: "un", description: "Notifications", command: "qs ipc call controlcenter toggle", icon: "notifications" },
-        { keys: "s", description: "Search", icon: "search" },
-        { keys: "sp", description: "Passwords", command: "qs ipc call bitwarden togglePassword", icon: "password" },
-        { keys: "st", description: "TOTP codes", command: "qs ipc call bitwarden toggleTotp", icon: "pin" },
-        { keys: "su", description: "Usernames", command: "qs ipc call bitwarden toggleUsername", icon: "person" },
-        { keys: "sc", description: "Clipboard history", command: "qs ipc call clipboardhistory toggle", icon: "content_paste" },
-        { keys: "se", description: "Emoji picker", command: "qs ipc call emoji toggle", icon: "emoji_emotions" },
-        { keys: "sn", description: "Nerd font picker", command: "qs ipc call nerdfont toggle", icon: "font_download" }
-    ];
-}
-
 function emptyTree() {
     return ({
         description: "",
@@ -91,7 +57,7 @@ function parseKeySequence(value) {
 }
 
 function normalizeBinds(rawBinds) {
-    const source = Array.isArray(rawBinds) ? rawBinds : defaultBinds();
+    const source = Array.isArray(rawBinds) ? rawBinds : [];
     const seen = ({});
     const result = [];
     for (const entry of source) {

@@ -22,7 +22,7 @@ Rectangle {
     readonly property int verticalPadding: Math.max(5, Math.round(root.barHeight * 0.16))
     readonly property int iconSize: Math.max(16, Math.round(root.barHeight * 0.5))
 
-    color: root.active ? TTheme.Palette.color("c0") : TTheme.Palette.color("front")
+    color: root.active ? TTheme.Palette.color("c0") : TTheme.Palette.color("high")
     radius: Config.Appearance.radiusMedium
 
     implicitWidth: iconLabel.implicitWidth + root.horizontalPadding * 2

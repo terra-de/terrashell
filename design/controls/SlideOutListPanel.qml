@@ -36,7 +36,7 @@ Primitives.SlideOutPanelWindow {
         ?? Math.max(64, Math.round(panelWidth * 0.24))
     readonly property int panelCloseDurationMs: Config.Motion.shortDuration
     readonly property color surfaceColor: TTheme.Palette.color("base")
-    readonly property color sectionColor: TTheme.Palette.color("front")
+    readonly property color sectionColor: TTheme.Palette.color("high")
     readonly property int panelWidth: Math.max(280, Math.round(Config.Config.appDrawer?.size?.width ?? 482))
     readonly property int totalItems: Array.isArray(root.items) ? root.items.length : 0
     readonly property var selectedItem: (root.state?.selectedIndex >= 0 && root.state?.selectedIndex < root.totalItems)
@@ -196,7 +196,7 @@ Primitives.SlideOutPanelWindow {
                 Layout.leftMargin: root.searchHorizontalPadding
                 Layout.rightMargin: root.searchHorizontalPadding
                 radius: height / 2
-                color: TTheme.Palette.color("front")
+                color: TTheme.Palette.color("high")
 
                 RowLayout {
                     anchors.fill: parent

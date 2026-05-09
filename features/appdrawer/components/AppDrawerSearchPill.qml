@@ -24,7 +24,7 @@ Rectangle {
     signal enterPressed()
 
     radius: height / 2
-    color: TTheme.Palette.color("front")
+    color: TTheme.Palette.color("high")
 
     RowLayout {
         anchors.fill: parent
