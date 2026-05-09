@@ -29,7 +29,7 @@ Row {
             width: active ? 28 : 8
             height: 8
             radius: height / 2
-            color: active ? TTheme.Palette.color("c0") : TTheme.Palette.color("outline")
+            color: active ? TTheme.Palette.color("c4") : TTheme.Palette.color("outline")
             opacity: active ? 1 : 0.72
 
             Behavior on width {

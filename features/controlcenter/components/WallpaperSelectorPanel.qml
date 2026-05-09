@@ -258,9 +258,9 @@ Item {
                     transformOrigin: Item.Right
                     radius: Config.Appearance.radiusLarge
                     antialiasing: true
-                    color: selected ? TTheme.Palette.color("c0") : TTheme.Palette.color("top")
+                    color: selected ? TTheme.Palette.color("c4") : TTheme.Palette.color("top")
                     border.width: selected ? 2 : 1
-                    border.color: selected ? TTheme.Palette.color("c0") : TTheme.Palette.color("outline")
+                    border.color: selected ? TTheme.Palette.color("c4") : TTheme.Palette.color("outline")
                     clip: true
 
                     Behavior on scale {

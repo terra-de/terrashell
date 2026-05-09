@@ -151,7 +151,7 @@ PanelWindow {
                     anchors.rightMargin: 12
                     color: TTheme.Palette.color("standard")
                     selectedTextColor: TTheme.Palette.color("on_c0")
-                    selectionColor: TTheme.Palette.color("c0")
+                    selectionColor: TTheme.Palette.color("c4")
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Config.Appearance.fontSizeMedium
                     verticalAlignment: TextInput.AlignVCenter
@@ -187,7 +187,7 @@ PanelWindow {
                     anchors.rightMargin: 12
                     color: TTheme.Palette.color("standard")
                     selectedTextColor: TTheme.Palette.color("on_c0")
-                    selectionColor: TTheme.Palette.color("c0")
+                    selectionColor: TTheme.Palette.color("c4")
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Config.Appearance.fontSizeMedium
                     verticalAlignment: TextInput.AlignVCenter
@@ -248,7 +248,7 @@ PanelWindow {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.buttonHeight
                     radius: Config.Appearance.radiusMedium
-                    color: TTheme.Palette.color("c0")
+                    color: TTheme.Palette.color("c4")
                     opacity: (setupEmailInput.text.trim() !== "" && !root.state.submitting) ? 1 : 0.55
 
                     Text {

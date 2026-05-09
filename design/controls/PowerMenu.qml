@@ -94,7 +94,7 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: TTheme.Palette.color("c0")
+                    color: TTheme.Palette.color("c4")
                     opacity: isConfirm ? 1 : 0
 
                     Behavior on opacity {

@@ -72,7 +72,7 @@ Rectangle {
                 Layout.fillWidth: true
                 height: 36
                 radius: Config.Appearance.radiusSmall
-                color: active ? TTheme.Palette.color("c0") : (shortcutMouseArea.containsMouse ? TTheme.Palette.color("top") : "transparent")
+                color: active ? TTheme.Palette.color("c4") : (shortcutMouseArea.containsMouse ? TTheme.Palette.color("top") : "transparent")
 
                 Behavior on color {
                     ColorAnimation {

@@ -45,7 +45,7 @@ Rectangle {
 
                 Text {
                     text: modelData.name
-                    color: breadcrumbMouseArea.containsMouse ? TTheme.Palette.color("c0") : TTheme.Palette.color("muted")
+                    color: breadcrumbMouseArea.containsMouse ? TTheme.Palette.color("c4") : TTheme.Palette.color("muted")
                     font.family: Config.Appearance.fontFamily
                     font.weight: Config.Appearance.fontWeight
                     font.pixelSize: Config.Appearance.fontSizeMedium
@@ -86,7 +86,7 @@ Rectangle {
         text: Services.FileManagerService.currentFolder.slice(7)
         color: TTheme.Palette.color("muted")
         selectedTextColor: TTheme.Palette.color("on_c0")
-        selectionColor: TTheme.Palette.color("c0")
+        selectionColor: TTheme.Palette.color("c4")
         font.family: Config.Appearance.fontFamily
         font.weight: Config.Appearance.fontWeight
         font.pixelSize: Config.Appearance.fontSizeMedium

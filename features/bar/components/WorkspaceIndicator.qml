@@ -35,7 +35,7 @@ Rectangle {
     Layout.alignment: Qt.AlignVCenter
 
     color: active
-        ? TTheme.Palette.color("c0")
+        ? TTheme.Palette.color("c4")
         : (hovered
             ? TTheme.Palette.color("c1")
             : (occupied

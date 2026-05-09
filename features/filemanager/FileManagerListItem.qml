@@ -27,7 +27,7 @@ Rectangle {
     height: 40
     radius: Config.Appearance.radiusSmall
     color: root.selected
-        ? TTheme.Palette.color("c0")
+        ? TTheme.Palette.color("c4")
         : "transparent"
 
     Behavior on color {

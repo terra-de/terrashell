@@ -48,7 +48,7 @@ Rectangle {
             clip: true
             color: TTheme.Palette.color("standard")
             selectedTextColor: TTheme.Palette.color("on_c0")
-            selectionColor: TTheme.Palette.color("c0")
+            selectionColor: TTheme.Palette.color("c4")
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight
             font.pixelSize: Config.Appearance.fontSizeMedium

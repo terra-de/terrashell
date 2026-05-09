@@ -24,7 +24,7 @@ Rectangle {
     readonly property int iconSize: Math.max(16, Math.round(root.barHeight * 0.5))
     readonly property int badgeSize: Math.max(7, Math.round(root.barHeight * 0.18))
 
-    color: root.active ? TTheme.Palette.color("c0") : TTheme.Palette.color("high")
+    color: root.active ? TTheme.Palette.color("c4") : TTheme.Palette.color("high")
     radius: Config.Appearance.radiusMedium
 
     implicitWidth: iconLabel.implicitWidth + root.horizontalPadding * 2

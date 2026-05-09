@@ -191,7 +191,7 @@ PanelWindow {
                         height: trackBackground.height
                         radius: trackBackground.radius
                         width: trackBackground.width * root.normalizedLevel
-                        color: TTheme.Palette.color("c0")
+                        color: TTheme.Palette.color("c4")
 
                         Behavior on width {
                             enabled: !root.interacting
@@ -208,7 +208,7 @@ PanelWindow {
                         width: root.thumbSize
                         height: root.thumbSize
                         radius: width / 2
-                        color: TTheme.Palette.color("c0")
+                        color: TTheme.Palette.color("c4")
                         anchors.verticalCenter: trackBackground.verticalCenter
                         x: trackBackground.x + trackBackground.width * root.normalizedLevel - width / 2
 
