@@ -16,6 +16,7 @@ Scope {
 
     readonly property string panelId: "whichkey"
     property var entries: []
+    property string currentSubmap: ""
 
     function monitorKey(monitor) {
         if (!monitor) {
@@ -170,6 +171,80 @@ Scope {
 
         function isOpen(): bool {
             return root.isOpen();
+        }
+
+        function show(submap: string): void {
+            root.currentSubmap = submap;
+            fetchBindsProcess.exec(["/usr/bin/hyprctl", "binds", "-j"]);
+        }
+
+        function dismiss(): void {
+            root.currentSubmap = "";
+            root.closeAll();
+        }
+    }
+
+    // Fetches hyprctl binds -j, filters by current submap, feeds to which-key state
+    Process {
+        id: fetchBindsProcess
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const raw = this.text.trim();
+                    if (!raw) {
+                        return;
+                    }
+
+                    const allBinds = JSON.parse(raw);
+                    const submapName = root.currentSubmap;
+                    if (!submapName) {
+                        return;
+                    }
+
+                    const filtered = allBinds.filter(b => (b.submap || "") === submapName);
+                    const entries = filtered.map(b => {
+                        const keys = b.key.toLowerCase();
+                        let icon = "";
+                        let description = b.description || b.dispatcher || "";
+
+                        // Parse <icon> prefix from description
+                        // Format: "<icon_name>Description text"
+                        const iconMatch = description.match(/^<([^>]+)>(.*)/);
+                        if (iconMatch) {
+                            icon = iconMatch[1];
+                            description = iconMatch[2].trim();
+                        }
+
+                        return {
+                            keys: keys,
+                            description: description,
+                            command: "",
+                            icon: icon,
+                        };
+                    });
+
+                    const state = root.targetState();
+                    if (state) {
+                        state.rebuildBinds(entries);
+                        state.open = true;
+                        state.path = [];
+                        state.refreshView();
+                        Services.PanelExclusivityService.requestOpen(root.panelId);
+                    }
+                } catch (e) {
+                    console.warn("WhichKeyService: failed to process binds", e);
+                }
+            }
+        }
+
+        stderr: StdioCollector {
+            onStreamFinished: {
+                const err = this.text.trim();
+                if (err) {
+                    console.warn("WhichKeyService: hyprctl binds error", err);
+                }
+            }
         }
     }
 

@@ -35,7 +35,7 @@ QtObject {
         root.enabled = normalized.enabled;
         root.closeOnUnknown = normalized.closeOnUnknown;
         root.title = normalized.title;
-        // Don't set binds from config — they come from keys.json via rebuildBinds()
+        // Don't set binds from config — they come from show() IPC handler via rebuildBinds()
         // defaultBinds() in WhichKeyTree.js serves as bootstrap until file loads
         root.path = [];
         root.refreshView();

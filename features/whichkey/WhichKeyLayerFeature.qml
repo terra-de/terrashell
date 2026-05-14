@@ -12,10 +12,13 @@ import "./vm" as WhichKeyVm
   Per-screen which-key overlay host and state registration.
   Required properties: panelScreen.
 
-  Which-key binds are loaded from two sources, in priority order:
-    1. ~/.config/terra/keys.json (user override, hot-reloaded)
-    2. /usr/share/terrashell/keys-defaults.json (shipped defaults)
-  If neither exists, the tree remains empty.
+  Which-key displays are driven dynamically by Hyprland submaps.
+  When a submap is entered, WhichKeyService calls show(submap),
+  which reads hyprctl binds -j, filters by submap, and populates
+  the display via rebuildBinds().
+
+  The keys.json file loading below is kept for backward compatibility
+  but is no longer the primary binding source.
  */
 Scope {
     id: root
