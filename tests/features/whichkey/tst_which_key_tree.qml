@@ -6,47 +6,48 @@ import "../../../features/whichkey/vm/WhichKeyTree.js" as WhichKeyTree
 TestCase {
     name: "WhichKeyTree"
 
-    function test_normalizeConfig() {
-        const normalized = WhichKeyTree.normalizeConfig({
-            enabled: true,
-            closeOnUnknown: false,
-            title: "Leader",
-            binds: [
-                { keys: "<enter>", description: "App drawer", command: "qs ipc call appdrawer toggle" },
-                { keys: "Wf", description: "Fullscreen", command: "cmd" },
-                { keys: "w-", description: "Invalid", command: "bad" },
-                { keys: "wf", description: "Duplicate", command: "dup" }
-            ]
-        });
-
-        compare(normalized.enabled, true);
-        compare(normalized.closeOnUnknown, false);
-        compare(normalized.binds.length, 2);
-        compare(normalized.binds[0].keys[0], "<enter>");
-        compare(normalized.binds[1].keys.join(""), "wf");
+    function test_normalizeBinds_empty() {
+        const result = WhichKeyTree.normalizeBinds([]);
+        compare(result.length, 0);
     }
 
-    function test_buildTreeAndEntries() {
-        const config = WhichKeyTree.normalizeConfig({
-            binds: [
-                { keys: "<enter>", description: "App drawer", command: "qs ipc call appdrawer toggle" },
-                { keys: "w", description: "Window" },
-                { keys: "wf", description: "Fullscreen", command: "hyprctl dispatch fullscreen" }
-            ]
-        });
-        const tree = WhichKeyTree.buildTree(config.binds);
+    function test_normalizeBinds_filtersEscapeBackspace() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "escape", description: "Close" },
+            { key: "backspace", description: "Back" },
+            { key: "y", description: "Toggle quickterm" },
+        ]);
+        compare(result.length, 1);
+        compare(result[0].key, "y");
+    }
 
-        const rootEntries = WhichKeyTree.entriesForPath(tree, []);
-        compare(rootEntries.length, 2);
-        compare(rootEntries[0].key, "<enter>");
-        compare(rootEntries[0].label, "Enter");
-        compare(rootEntries[0].command, "qs ipc call appdrawer toggle");
-        compare(rootEntries[1].key, "w");
-        compare(rootEntries[1].hasChildren, true);
+    function test_normalizeBinds_detectsSubmap() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "u", description: "Utilities", dispatcher: "submap" },
+            { key: "y", description: "Toggle quickterm", dispatcher: "togglespecialworkspace" },
+        ]);
+        compare(result.length, 2);
+        compare(result[0].key, "u");
+        compare(result[0].hasChildren, true);
+        compare(result[1].key, "y");
+        compare(result[1].hasChildren, false);
+    }
 
-        const windowEntries = WhichKeyTree.entriesForPath(tree, ["w"]);
-        compare(windowEntries.length, 1);
-        compare(windowEntries[0].key, "f");
-        compare(windowEntries[0].command, "hyprctl dispatch fullscreen");
+    function test_normalizeBinds_parsesIconPrefix() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "y", description: "<terminal>Toggle quickterm", dispatcher: "exec_cmd" },
+        ]);
+        compare(result.length, 1);
+        compare(result[0].icon, "terminal");
+        compare(result[0].description, "Toggle quickterm");
+    }
+
+    function test_normalizeBinds_deduplicates() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "y", description: "First", dispatcher: "exec_cmd" },
+            { key: "Y", description: "Duplicate", dispatcher: "exec_cmd" },
+        ]);
+        compare(result.length, 1);
+        compare(result[0].description, "First"); // first wins lowercase key
     }
 }

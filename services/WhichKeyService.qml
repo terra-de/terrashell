@@ -6,6 +6,7 @@ import Quickshell.Hyprland
 import Quickshell.Io
 
 import "./" as Services
+import "../features/whichkey/vm/WhichKeyTree.js" as WhichKeyTree
 
 /*
   WhichKeyService
@@ -111,7 +112,7 @@ Scope {
 
         Services.PanelExclusivityService.requestOpen(root.panelId);
         root.closeAll();
-        state.openLeader();
+        state.open = true;
     }
 
     function toggleLeader() {
@@ -202,34 +203,21 @@ Scope {
                         return;
                     }
 
+                    // Pass raw hyprctl bind data to WhichKeyTree.normalizeBinds
+                    // which handles: key tokenization, escape/backspace filtering,
+                    // group detection from dispatcher type, icon parsing, sorting.
                     const filtered = allBinds.filter(b => (b.submap || "") === submapName);
-                    const entries = filtered.map(b => {
-                        const keys = b.key.toLowerCase();
-                        let icon = "";
-                        let description = b.description || b.dispatcher || "";
-
-                        // Parse <icon> prefix from description
-                        // Format: "<icon_name>Description text"
-                        const iconMatch = description.match(/^<([^>]+)>(.*)/);
-                        if (iconMatch) {
-                            icon = iconMatch[1];
-                            description = iconMatch[2].trim();
-                        }
-
-                        return {
-                            keys: keys,
-                            description: description,
-                            command: "",
-                            icon: icon,
-                        };
-                    });
+                    const entries = filtered.map(b => ({
+                        key: b.key,
+                        description: b.description || b.dispatcher || "",
+                        dispatcher: b.dispatcher || "",
+                        icon: "",
+                    }));
 
                     const state = root.targetState();
                     if (state) {
-                        state.rebuildBinds(entries);
+                        state.rebuildBinds(WhichKeyTree.normalizeBinds(entries));
                         state.open = true;
-                        state.path = [];
-                        state.refreshView();
                         Services.PanelExclusivityService.requestOpen(root.panelId);
                     }
                 } catch (e) {

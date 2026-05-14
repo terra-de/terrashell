@@ -1,12 +1,3 @@
-function emptyTree() {
-    return ({
-        description: "",
-        command: "",
-        icon: "",
-        children: ({})
-    });
-}
-
 function keyTokenLabel(token) {
     if (token === "<enter>") {
         return "keyboard_return";
@@ -25,152 +16,78 @@ function parseKeySequence(value) {
         return [];
     }
 
-    const tokens = [];
-    let index = 0;
-    while (index < normalized.length) {
-        const current = normalized[index];
-        if (current === "<") {
-            const end = normalized.indexOf(">", index);
-            if (end < 0) {
-                return [];
-            }
-
-            const token = normalized.slice(index, end + 1);
-            if (token !== "<enter>") {
-                return [];
-            }
-
-            tokens.push(token);
-            index = end + 1;
-            continue;
-        }
-
-        if (!/[a-z0-9]/.test(current)) {
-            return [];
-        }
-
-        tokens.push(current);
-        index += 1;
-    }
-
-    return tokens;
+    // Return the entire key name as a single token.
+    // hyprctl binds -j reports resolved key names like "escape", "backspace", "y", "r".
+    // The old character-by-character splitting was designed for the
+    // pre-submap binding system and broke multi-character keysym names.
+    return [normalized];
 }
 
+// Takes raw bind entries from hyprctl binds -j (filtered to current submap).
+// Returns a flat array of entry objects suitable for display:
+//   { key, label, description, icon, hasChildren }
+// Automatically excludes escape/backspace (shown in footer instead).
+// Marks entries as hasChildren=true when dispatcher is "submap".
 function normalizeBinds(rawBinds) {
     const source = Array.isArray(rawBinds) ? rawBinds : [];
     const seen = ({});
     const result = [];
+
     for (const entry of source) {
         if (!entry || typeof entry !== "object") {
             continue;
         }
-        const tokens = parseKeySequence(entry.keys);
-        const keyPath = tokens.join(" ");
-        if (tokens.length === 0 || seen[keyPath]) {
+
+        const key = typeof entry.key === "string" ? entry.key.trim().toLowerCase() : "";
+        if (!key) {
             continue;
         }
-        seen[keyPath] = true;
+
+        // Skip special keys shown in footer
+        if (key === "escape" || key === "backspace") {
+            continue;
+        }
+
+        if (seen[key]) {
+            continue;
+        }
+        seen[key] = true;
+
+        const tokens = parseKeySequence(key);
+        if (tokens.length === 0) {
+            continue;
+        }
 
         const description = typeof entry.description === "string" ? entry.description.trim() : "";
-        const command = typeof entry.command === "string" ? entry.command.trim() : "";
         const icon = typeof entry.icon === "string" ? entry.icon.trim() : "";
+        const dispatcher = typeof entry.dispatcher === "string" ? entry.dispatcher : "";
+        const isSubmap = dispatcher === "submap";
+
+        // Parse <icon> prefix from description
+        let displayDesc = description;
+        let displayIcon = icon;
+        const iconMatch = displayDesc.match(/^<([^>]+)>(.*)/);
+        if (iconMatch) {
+            displayIcon = iconMatch[1];
+            displayDesc = iconMatch[2].trim();
+        }
+
         result.push({
-            keys: tokens,
-            description: description || (command ? "Action" : "Group"),
-            command: command,
-            icon: icon
+            key: tokens[0],
+            label: keyTokenLabel(tokens[0]),
+            description: displayDesc || (isSubmap ? "Group" : "Action"),
+            icon: displayIcon || (isSubmap ? "folder" : "bolt"),
+            hasChildren: isSubmap,
         });
     }
+
+    // Sort: groups first, then alphabetically
+    result.sort((a, b) => {
+        if (a.hasChildren !== b.hasChildren) {
+            return a.hasChildren ? -1 : 1;
+        }
+        return a.key.localeCompare(b.key);
+    });
 
     return result;
-}
-
-function normalizeConfig(rawConfig) {
-    const source = rawConfig && typeof rawConfig === "object" ? rawConfig : ({});
-    const title = typeof source.title === "string" && source.title.trim() ? source.title.trim() : "Leader";
-    return ({
-        enabled: source.enabled !== false,
-        closeOnUnknown: source.closeOnUnknown !== false,
-        title: title,
-        binds: normalizeBinds(source.binds)
-    });
-}
-
-function ensureNodeChild(node, key) {
-    if (!node.children[key]) {
-        node.children[key] = emptyTree();
-    }
-    return node.children[key];
-}
-
-function buildTree(binds) {
-    const root = emptyTree();
-    root.description = "Leader";
-    for (const bind of binds) {
-        let node = root;
-        for (const key of bind.keys) {
-            node = ensureNodeChild(node, key);
-        }
-        node.description = bind.description;
-        node.command = bind.command;
-        node.icon = bind.icon;
-    }
-    return root;
-}
-
-function nodeForPath(tree, path) {
-    let node = tree;
-    for (const key of path) {
-        const nextNode = node.children?.[key];
-        if (!nextNode) {
-            return tree;
-        }
-        node = nextNode;
-    }
-    return node;
-}
-
-function inferIcon(path, key, entry) {
-    const full = `${path.join("")}${key}`;
-    if (entry.children && Object.keys(entry.children).length > 0) {
-        if (full.startsWith("w")) {
-            return "web_asset";
-        }
-        if (full.startsWith("l")) {
-            return "dashboard";
-        }
-        if (full.startsWith("u")) {
-            return "build";
-        }
-        if (full.startsWith("s")) {
-            return "search";
-        }
-        return "folder";
-    }
-    return "bolt";
-}
-
-function entriesForPath(tree, path) {
-    const node = nodeForPath(tree, path);
-    const keys = Object.keys(node.children || ({})).sort();
-    return keys.map(key => {
-        const entry = node.children[key] || emptyTree();
-        const childCount = Object.keys(entry.children || ({})).length;
-        return ({
-            key: key,
-            label: keyTokenLabel(key),
-            description: entry.description || (childCount > 0 ? "Group" : "Action"),
-            icon: entry.icon || inferIcon(path, key, entry),
-            command: entry.command || "",
-            hasChildren: childCount > 0
-        });
-    });
-}
-
-function crumbLabel(title, path) {
-    const prefix = typeof title === "string" && title.trim() ? title.trim() : "Leader";
-    if (!Array.isArray(path) || path.length === 0) {
-        return prefix;
-    }
-    return `${prefix} ${path.join(" ").toUpperCase()}`;
 }

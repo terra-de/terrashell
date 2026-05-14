@@ -10,9 +10,11 @@ import "../../../design/primitives" as Primitives
 
 /*
   WhichKeyPopup
-  Renders which-key content inside the same bottom slide-out drawer shell as app drawer.
+  Display-only which-key overlay driven by Hyprland submap IPC.
+  All navigation is handled by Hyprland submaps — this popup
+  just shows the available keys for the current submap.
   Required properties: panelScreen, active, viewModel, style.
- */
+*/
 Primitives.SlideOutPanelWindow {
     id: root
 
@@ -52,97 +54,10 @@ Primitives.SlideOutPanelWindow {
     readonly property int iconSize: style?.iconSize ?? 18
     readonly property int keySize: style?.keySize ?? 13
 
-    function keyFromEvent(event) {
-        if (!event) {
-            return "";
-        }
-
-        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-            return "<enter>";
-        }
-
-        const text = typeof event.text === "string" ? event.text.trim().toLowerCase() : "";
-        if (/^[a-z0-9]$/.test(text)) {
-            return text;
-        }
-        return "";
-    }
-
-    function dispatchEntryKey(key) {
-        if (!key) {
-            return;
-        }
-        root.viewModel.activateEntry(key);
-    }
-
     open: root.active
     closeDurationMs: root.panelCloseDurationMs
-    focusable: true
     WlrLayershell.namespace: "quickshell-whichkey"
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: root.active ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
-
-    onVisibleChanged: {
-        if (!visible) {
-            focusRetryTimer.stop();
-        }
-    }
-
-    Timer {
-        id: focusTimer
-
-        interval: 0
-        repeat: false
-        onTriggered: keyRouter.forceActiveFocus()
-    }
-
-    Timer {
-        id: focusRetryTimer
-
-        interval: 70
-        repeat: false
-        onTriggered: {
-            if (root.active) {
-                keyRouter.forceActiveFocus();
-            }
-        }
-    }
-
-    Connections {
-        target: root
-
-        function onOpenChanged() {
-            if (root.open) {
-                focusTimer.restart();
-                focusRetryTimer.restart();
-            } else {
-                focusRetryTimer.stop();
-            }
-        }
-    }
-
-    HyprlandFocusGrab {
-        id: focusGrab
-
-        windows: [root]
-        active: root.active && root.visible
-
-        onCleared: {
-            if (root.active) {
-                root.viewModel.close();
-            }
-        }
-    }
-
-    MouseArea {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-        height: Math.max(0, Math.round(mainPanel.visibleSurfaceY))
-        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-        enabled: root.active
-        onClicked: root.viewModel.close()
-    }
 
     Primitives.SlideOutPanelSurface {
         id: mainPanel
@@ -162,40 +77,26 @@ Primitives.SlideOutPanelWindow {
             anchors.margins: root.contentPadding
             spacing: root.contentSpacing
 
+            // Header: title only (crumb removed — navigation is submap-driven)
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.headerHeight
                 Layout.leftMargin: root.headerHorizontalPadding
                 Layout.rightMargin: root.headerHorizontalPadding
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 2
-
-                    Text {
-                        text: root.viewModel.title || "Leader"
-                        color: TTheme.Palette.color("standard")
-                        font.family: Config.Appearance.fontFamily
-                        font.pixelSize: Config.Appearance.fontSizeLarge
-                        font.weight: Font.DemiBold
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    Text {
-                        text: root.viewModel.crumb
-                        color: TTheme.Palette.color("muted")
-                        font.family: Config.Appearance.fontFamily
-                        font.pixelSize: Config.Appearance.fontSizeSmall
-                        font.weight: Font.Medium
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
+                Text {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: root.viewModel.title || "Leader"
+                    color: TTheme.Palette.color("standard")
+                    font.family: Config.Appearance.fontFamily
+                    font.pixelSize: Config.Appearance.fontSizeLarge
+                    font.weight: Font.DemiBold
+                    elide: Text.ElideRight
                 }
             }
 
+            // Main key grid
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -237,7 +138,6 @@ Primitives.SlideOutPanelWindow {
                                     readonly property string bindDescription: modelData.description || ""
                                     readonly property string bindIcon: modelData.icon || "bolt"
                                     readonly property bool bindHasChildren: modelData.hasChildren ?? false
-                                    readonly property bool bindLabelIsIcon: bindKey === "<enter>"
 
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: root.itemHeight
@@ -260,8 +160,8 @@ Primitives.SlideOutPanelWindow {
                                         }
 
                                         Rectangle {
-                                            Layout.preferredWidth: delegateRoot.bindLabelIsIcon ? 34 : 28
-                                            Layout.preferredHeight: delegateRoot.bindLabelIsIcon ? 24 : 22
+                                            Layout.preferredWidth: 28
+                                            Layout.preferredHeight: 22
                                             radius: 6
                                             color: TTheme.Palette.color("high")
                                             border.width: 1
@@ -271,13 +171,9 @@ Primitives.SlideOutPanelWindow {
                                                 anchors.centerIn: parent
                                                 text: delegateRoot.bindLabel
                                                 color: TTheme.Palette.color("standard")
-                                                font.family: delegateRoot.bindLabelIsIcon
-                                                    ? Config.Appearance.iconFontFamily
-                                                    : Config.Appearance.fontFamily
-                                                font.pixelSize: delegateRoot.bindLabelIsIcon
-                                                    ? Math.max(root.keySize + 1, 16)
-                                                    : root.keySize
-                                                font.weight: delegateRoot.bindLabelIsIcon ? Font.Medium : Font.DemiBold
+                                                font.family: Config.Appearance.fontFamily
+                                                font.pixelSize: root.keySize
+                                                font.weight: Font.DemiBold
                                             }
                                         }
 
@@ -302,12 +198,6 @@ Primitives.SlideOutPanelWindow {
                                             Layout.alignment: Qt.AlignVCenter
                                         }
                                     }
-
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        onClicked: root.dispatchEntryKey(parent.bindKey)
-                                    }
                                 }
                             }
                         }
@@ -315,55 +205,19 @@ Primitives.SlideOutPanelWindow {
                 }
             }
 
+            // Footer: special keys always shown
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.footerHeight
 
                 Text {
                     anchors.centerIn: parent
-                    text: root.viewModel.path.length > 0 ? "Backspace back  Esc close" : "Esc close"
+                    text: "Esc Close    Backspace Back"
                     color: TTheme.Palette.color("muted")
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Config.Appearance.fontSizeSmall
                     font.weight: Font.Medium
                 }
-            }
-        }
-    }
-
-    Item {
-        id: keyRouter
-
-        anchors.fill: parent
-        focus: root.active
-
-        Keys.onPressed: event => {
-            if (!root.active) {
-                return;
-            }
-
-            if (event.key === Qt.Key_Escape) {
-                root.viewModel.close();
-                event.accepted = true;
-                return;
-            }
-
-            if (event.key === Qt.Key_Backspace) {
-                root.viewModel.back();
-                event.accepted = true;
-                return;
-            }
-
-            const key = root.keyFromEvent(event);
-            if (key) {
-                root.dispatchEntryKey(key);
-                event.accepted = true;
-                return;
-            }
-
-            if (root.viewModel.closeOnUnknown) {
-                root.viewModel.close();
-                event.accepted = true;
             }
         }
     }

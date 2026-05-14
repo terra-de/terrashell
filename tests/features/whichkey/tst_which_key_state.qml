@@ -11,68 +11,48 @@ TestCase {
 
         config: ({
             enabled: true,
-            closeOnUnknown: true,
-            binds: [
-                { keys: "<enter>", description: "App drawer", command: "qs ipc call appdrawer toggle" },
-                { keys: "w", description: "Window" },
-                { keys: "wf", description: "Fullscreen", command: "hyprctl dispatch fullscreen" }
-            ]
+            title: "Leader",
         })
     }
 
-    property string lastCommand: ""
-
-    Connections {
-        target: state
-
-        function onCommandRequested(command) {
-            lastCommand = command;
-        }
-    }
-
     function init() {
-        lastCommand = "";
         state.close();
-        state.applyConfig(state.config);
+        state.enabled = true;
     }
 
-    function test_toggleAndBack() {
+    function test_initialState() {
         compare(state.open, false);
-        state.toggleLeader();
+        compare(state.enabled, true);
+        compare(state.title, "Leader");
+        compare(state.entries.length, 0);
+    }
+
+    function test_rebuildBinds() {
+        state.rebuildBinds([
+            { key: "y", label: "Y", description: "Toggle quickterm", icon: "terminal", hasChildren: false },
+            { key: "r", label: "R", description: "Reload config", icon: "refresh", hasChildren: false },
+        ]);
+        compare(state.entries.length, 2);
+        compare(state.entries[0].key, "y");
+        compare(state.entries[1].key, "r");
+    }
+
+    function test_rebuildBinds_emptyDoesNothing() {
+        state.rebuildBinds([]);
+        compare(state.entries.length, 0);
+    }
+
+    function test_close() {
+        state.open = true;
         compare(state.open, true);
-
-        state.activateEntry("w");
-        compare(state.path.length, 1);
-        compare(state.path[0], "w");
-
-        state.back();
-        compare(state.path.length, 0);
-        compare(state.open, true);
-
-        state.back();
+        state.close();
         compare(state.open, false);
     }
 
-    function test_executeLeafCommand() {
-        state.openLeader();
-        state.activateEntry("w");
-        state.activateEntry("f");
-
-        compare(state.open, false);
-        compare(lastCommand, "hyprctl dispatch fullscreen");
-    }
-
-    function test_unknownKeyClosesWhenConfigured() {
-        state.openLeader();
-        state.activateEntry("x");
-        compare(state.open, false);
-    }
-
-    function test_enterBindAtLeaderRoot() {
-        state.openLeader();
-        state.activateEntry("<enter>");
-
-        compare(state.open, false);
-        compare(lastCommand, "qs ipc call appdrawer toggle");
+    function test_configDisabled() {
+        const original = state.config;
+        state.config = { enabled: false, title: "Disabled" };
+        compare(state.enabled, false);
+        state.config = original;
     }
 }
