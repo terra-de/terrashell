@@ -52,4 +52,12 @@ Item {
             root.markReadyWithDefaults();
         }
     }
+
+    IpcHandler {
+        target: "config"
+
+        function reload(): void {
+            configFile.reload();
+        }
+    }
 }
