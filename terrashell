@@ -2,7 +2,7 @@
 # terrashell — launch the Terra DE Quickshell configuration
 set -euo pipefail
 
-TERRASHELL_DIR="${TERRASHELL_DEV_DIR:-/usr/share/terrashell}"
+TERRASHELL_DIR="${TERRASHELL_PATH:-/usr/share/terrashell}"
 
 # User config override
 if [ -f "$HOME/.config/terrashell/config.json" ]; then
