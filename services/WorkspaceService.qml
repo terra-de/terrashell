@@ -134,7 +134,7 @@ Scope {
         }
 
         const safeName = typeof name === "string" ? name : "";
-        renameProcess.exec(["/bin/sh", "-lc", `hyprctl dispatch renameworkspace ${id} "${safeName}"`]);
+        renameProcess.exec(["/bin/sh", "-lc", `tctl workspace rename ${id} "${safeName}"`]);
     }
 
     function activateWorkspace(id) {
@@ -142,7 +142,7 @@ Scope {
             return;
         }
 
-        activateProcess.exec(["hyprctl", "dispatch", "workspace", id.toString()]);
+        activateProcess.exec(["/bin/sh", "-lc", `tctl workspace activate ${id}`]);
     }
 
     IpcHandler {

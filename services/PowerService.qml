@@ -6,14 +6,11 @@ import Quickshell.Io
 
 /*!
   PowerService
-  Executes power actions (lock, suspend, hibernate, logout, reboot, poweroff).
+  Executes power actions (lock, suspend, hibernate, logout, reboot, shutdown).
+  All actions are routed through tctl power.
 */
 Scope {
     id: root
-
-    function runCommand(args) {
-        commandProcess.exec(args);
-    }
 
     function trigger(actionId) {
         if (actionId === "lock") {
@@ -36,33 +33,33 @@ Scope {
             reboot();
             return;
         }
-        if (actionId === "poweroff") {
-            poweroff();
+        if (actionId === "poweroff" || actionId === "shutdown") {
+            shutdown();
         }
     }
 
     function lock() {
-        runCommand(["loginctl", "lock-session"]);
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power lock"]);
     }
 
     function suspend() {
-        runCommand(["systemctl", "suspend"]);
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power suspend"]);
     }
 
     function hibernate() {
-        runCommand(["systemctl", "hibernate"]);
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power hibernate"]);
     }
 
     function logout() {
-        runCommand(["hyprctl", "dispatch", "exit"]);
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power logout"]);
     }
 
     function reboot() {
-        runCommand(["systemctl", "reboot"]);
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power reboot"]);
     }
 
-    function poweroff() {
-        runCommand(["systemctl", "poweroff"]);
+    function shutdown() {
+        commandProcess.exec(["/bin/sh", "-lc", "tctl power shutdown"]);
     }
 
     Process {

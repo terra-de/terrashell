@@ -176,7 +176,7 @@ Scope {
 
         function show(submap: string): void {
             root.currentSubmap = submap;
-            fetchBindsProcess.exec(["/usr/bin/hyprctl", "binds", "-j"]);
+            fetchBindsProcess.exec(["/bin/sh", "-lc", "tctl binds list"]);
         }
 
         function dismiss(): void {
