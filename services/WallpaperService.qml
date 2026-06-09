@@ -69,7 +69,7 @@ Scope {
         root.currentWallpaperPath = normalizedPath;
         root.applyInFlight = true;
         root.lastError = "";
-        applyProcess.exec(WallpaperParsers.buildTerrathemeArgs(root.currentWallpaperPath, root.darkModeEnabled));
+        applyProcess.exec(WallpaperParsers.buildApplyArgs(root.currentWallpaperPath, root.darkModeEnabled));
     }
 
     function moveSelection(index, delta) {

@@ -78,7 +78,7 @@ function clampIndex(index, count) {
     return Math.max(0, Math.min(count - 1, Math.round(index)));
 }
 
-function buildTerrathemeArgs(wallpaperPath, darkModeEnabled) {
+function buildApplyArgs(wallpaperPath, darkModeEnabled) {
     const mode = darkModeEnabled ? "dark" : "light";
-    return ["terratheme", "set", wallpaperPath, "--mode", mode];
+    return ["tctl", "wallpaper", "set", wallpaperPath, "--mode", mode];
 }
