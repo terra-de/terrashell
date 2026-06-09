@@ -47,11 +47,8 @@ Scope {
     }
 
     function toggle() {
-        if (root.visible) {
-            root.hide();
-        } else {
-            root.show();
-        }
+        sigProcess.exec(["/bin/sh", "-lc", "tctl osk toggle"]);
+        refreshDelay.restart();
     }
 
     IpcHandler {
