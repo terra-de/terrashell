@@ -22,18 +22,17 @@ Item {
     readonly property bool critical: String(root.entry?.urgency || "").toLowerCase().indexOf("critical") >= 0
     readonly property bool persistent: (root.entry?.notification?.expireTimeout ?? -1) === 0
     readonly property bool hasBody: (root.entry?.body || "") !== ""
-    property int currentTimeMs: Date.now()
+    property int _tick: 0
 
-    readonly property int ageSeconds: root.entry?.receivedAtMs
-        ? Math.max(0, Math.floor((root.currentTimeMs - root.entry.receivedAtMs) / 1000))
-        : -1
-
-    function ageLabel(ageSec) {
-        if (ageSec < 0) return "";
-        if (ageSec < 60) return `${ageSec}s`;
-        if (ageSec < 3600) return `${Math.floor(ageSec / 60)}m`;
-        if (ageSec < 86400) return `${Math.floor(ageSec / 3600)}h`;
-        return `${Math.floor(ageSec / 86400)}d`;
+    readonly property string ageText: {
+        root._tick;
+        const received = root.entry?.receivedAtMs;
+        if (!received) return "";
+        const delta = Math.max(0, Math.floor((Date.now() - received) / 1000));
+        if (delta < 60) return `${delta}s`;
+        if (delta < 3600) return `${Math.floor(delta / 60)}m`;
+        if (delta < 86400) return `${Math.floor(delta / 3600)}h`;
+        return `${Math.floor(delta / 86400)}d`;
     }
     readonly property bool hovered: hoverHandler.hovered
     readonly property int contentPadding: Math.max(8, Config.Config.notifications?.popup?.itemPadding ?? 12)
@@ -92,7 +91,7 @@ Item {
         interval: 1000
         repeat: true
         running: true
-        onTriggered: root.currentTimeMs = Date.now()
+        onTriggered: root._tick++
     }
 
     Rectangle {
@@ -182,8 +181,8 @@ Item {
 
                 Text {
                     id: ageLabelText
-                    visible: root.ageLabel(root.ageSeconds) !== ""
-                    text: root.ageLabel(root.ageSeconds)
+                    visible: root.ageText !== ""
+                    text: root.ageText
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Math.max(10, Math.round(Config.Appearance.fontSizeSmall * 0.8))
                     color: root.metaColor
