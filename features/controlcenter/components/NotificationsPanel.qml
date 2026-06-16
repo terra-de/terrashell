@@ -212,6 +212,7 @@ Item {
                         readonly property var modelData: notificationEntry
 
                         readonly property bool critical: String(modelData.urgency || "").toLowerCase().indexOf("critical") >= 0
+                        readonly property bool persistent: (modelData.notification?.expireTimeout ?? -1) === 0
                         readonly property bool hasBody: (modelData.body || "") !== ""
                         readonly property color surfaceColor: critical
                             ? TTheme.Palette.color("error")
@@ -246,6 +247,15 @@ Item {
                                     Layout.preferredWidth: root.iconSize
                                     Layout.preferredHeight: root.iconSize
                                     Layout.alignment: Qt.AlignTop
+                                }
+
+                                Text {
+                                    visible: delegateRoot.persistent
+                                    text: "push_pin"
+                                    font.family: Config.Appearance.iconFontFamily
+                                    font.pixelSize: Math.max(12, Math.round(Config.Appearance.fontSizeSmall * 0.85))
+                                    color: metaColor
+                                    verticalAlignment: Text.AlignTop
                                 }
 
                                 RowLayout {

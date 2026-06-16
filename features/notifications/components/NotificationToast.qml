@@ -20,6 +20,7 @@ Item {
     required property int widthValue
 
     readonly property bool critical: String(root.entry?.urgency || "").toLowerCase().indexOf("critical") >= 0
+    readonly property bool persistent: (root.entry?.notification?.expireTimeout ?? -1) === 0
     readonly property bool hasBody: (root.entry?.body || "") !== ""
     property int currentTimeMs: Date.now()
 
@@ -128,6 +129,15 @@ Item {
                     Layout.preferredWidth: root.iconSize
                     Layout.preferredHeight: root.iconSize
                     Layout.alignment: Qt.AlignTop
+                }
+
+                Text {
+                    visible: root.persistent
+                    text: "push_pin"
+                    font.family: Config.Appearance.iconFontFamily
+                    font.pixelSize: Math.max(12, Math.round(Config.Appearance.fontSizeSmall * 0.85))
+                    color: root.metaColor
+                    verticalAlignment: Text.AlignTop
                 }
 
                 ColumnLayout {
