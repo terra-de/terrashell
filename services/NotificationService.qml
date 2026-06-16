@@ -528,6 +528,11 @@ Scope {
         root._scheduleActionableAutoClose(entry);
     }
 
+    function hideNotification(entry) {
+        root.hidePopup(entry);
+        root.markSeen(entry.id);
+    }
+
     NotificationServer {
         id: server
 

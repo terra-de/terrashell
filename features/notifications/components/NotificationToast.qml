@@ -173,6 +173,19 @@ Item {
                 }
 
                 Text {
+                    text: "expand_more"
+                    font.family: Config.Appearance.iconFontFamily
+                    font.pixelSize: Config.Appearance.fontSizeLarge
+                    color: root.metaColor
+                    verticalAlignment: Text.AlignTop
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Services.NotificationService.hideNotification(root.entry)
+                    }
+                }
+
+                Text {
                     text: "close"
                     font.family: Config.Appearance.iconFontFamily
                     font.pixelSize: Config.Appearance.fontSizeLarge
