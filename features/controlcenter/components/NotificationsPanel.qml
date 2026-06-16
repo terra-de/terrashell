@@ -228,6 +228,11 @@ Item {
                         radius: Config.Appearance.radiusMedium
                         color: surfaceColor
 
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: Services.NotificationService.navigateToNotificationApp(delegateRoot.modelData)
+                        }
+
                         ColumnLayout {
                             id: contentColumn
 
@@ -363,11 +368,6 @@ Item {
                                     }
                                 }
                             }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: Services.NotificationService.navigateToNotificationApp(delegateRoot.modelData)
                         }
                     }
                 }

@@ -24,13 +24,16 @@ Item {
     readonly property bool hasBody: (root.entry?.body || "") !== ""
     property int currentTimeMs: Date.now()
 
-    function ageLabel(receivedAtMs) {
-        if (!receivedAtMs) return "";
-        const deltaSeconds = Math.max(0, Math.floor((root.currentTimeMs - receivedAtMs) / 1000));
-        if (deltaSeconds < 60) return `${deltaSeconds}s`;
-        if (deltaSeconds < 3600) return `${Math.floor(deltaSeconds / 60)}m`;
-        if (deltaSeconds < 86400) return `${Math.floor(deltaSeconds / 3600)}h`;
-        return `${Math.floor(deltaSeconds / 86400)}d`;
+    readonly property int ageSeconds: root.entry?.receivedAtMs
+        ? Math.max(0, Math.floor((root.currentTimeMs - root.entry.receivedAtMs) / 1000))
+        : -1
+
+    function ageLabel(ageSec) {
+        if (ageSec < 0) return "";
+        if (ageSec < 60) return `${ageSec}s`;
+        if (ageSec < 3600) return `${Math.floor(ageSec / 60)}m`;
+        if (ageSec < 86400) return `${Math.floor(ageSec / 3600)}h`;
+        return `${Math.floor(ageSec / 86400)}d`;
     }
     readonly property bool hovered: hoverHandler.hovered
     readonly property int contentPadding: Math.max(8, Config.Config.notifications?.popup?.itemPadding ?? 12)
@@ -108,6 +111,11 @@ Item {
             }
         }
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: Services.NotificationService.navigateToNotificationApp(root.entry)
+        }
+
         ColumnLayout {
             id: contentColumn
 
@@ -174,8 +182,8 @@ Item {
 
                 Text {
                     id: ageLabelText
-                    visible: root.ageLabel(root.entry?.receivedAtMs) !== ""
-                    text: root.ageLabel(root.entry?.receivedAtMs)
+                    visible: root.ageLabel(root.ageSeconds) !== ""
+                    text: root.ageLabel(root.ageSeconds)
                     font.family: Config.Appearance.fontFamily
                     font.pixelSize: Math.max(10, Math.round(Config.Appearance.fontSizeSmall * 0.8))
                     color: root.metaColor
@@ -257,11 +265,6 @@ Item {
                     }
                 }
             }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: Services.NotificationService.navigateToNotificationApp(root.entry)
         }
 
         HoverHandler {
