@@ -364,6 +364,11 @@ Item {
                                 }
                             }
                         }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: Services.NotificationService.navigateToNotificationApp(delegateRoot.modelData)
+                        }
                     }
                 }
 

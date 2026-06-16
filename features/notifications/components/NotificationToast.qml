@@ -259,6 +259,11 @@ Item {
             }
         }
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: Services.NotificationService.navigateToNotificationApp(root.entry)
+        }
+
         HoverHandler {
             id: hoverHandler
             target: toastBody

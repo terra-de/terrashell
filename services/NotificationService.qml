@@ -4,6 +4,7 @@ import QtQuick
 import QtQml
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 import Quickshell.Services.Notifications
 
 import "../config" as Config
@@ -531,6 +532,30 @@ Scope {
     function hideNotification(entry) {
         root.hidePopup(entry);
         root.markSeen(entry.id);
+    }
+
+    function navigateToNotificationApp(entry) {
+        if (!entry) return;
+
+        const desktopId = entry.notification?.desktopEntry || "";
+        if (!desktopId) return;
+
+        const desktopEntry = DesktopEntries.byId(desktopId);
+        if (!desktopEntry) return;
+
+        const startupClass = desktopEntry.startupClass;
+        if (startupClass) {
+            const toplevels = Hyprland.toplevels?.values ?? [];
+            for (const tlv of toplevels) {
+                const ipc = tlv.lastIpcObject || {};
+                if (ipc.class === startupClass || ipc.initialClass === startupClass) {
+                    Services.WorkspaceService.activateWorkspace(tlv.workspace.id);
+                    return;
+                }
+            }
+        }
+
+        desktopEntry.execute();
     }
 
     NotificationServer {
