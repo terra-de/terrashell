@@ -11,6 +11,7 @@ Rectangle {
     required property int workspaceId
     required property bool active
     required property bool occupied
+    required property bool urgent
     required property bool vertical
 
     property real contentWidth: 0
@@ -34,13 +35,15 @@ Rectangle {
     Layout.preferredHeight: implicitHeight
     Layout.alignment: Qt.AlignVCenter
 
-    color: active
-        ? TTheme.Palette.color("c4")
-        : (hovered
-            ? TTheme.Palette.color("c1")
-            : (occupied
-                ? TTheme.Palette.color("high")
-                : TTheme.Palette.color("base")))
+    color: urgent
+        ? TTheme.Palette.color("error")
+        : (active
+            ? TTheme.Palette.color("c4")
+            : (hovered
+                ? TTheme.Palette.color("c1")
+                : (occupied
+                    ? TTheme.Palette.color("high")
+                    : TTheme.Palette.color("base"))))
 
     Behavior on implicitWidth {
         Anim {

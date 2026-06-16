@@ -12,6 +12,7 @@ Item {
     required property string label
     required property bool active
     required property bool occupied
+    required property bool urgent
     required property bool vertical
 
     implicitWidth: indicator.implicitWidth
@@ -23,6 +24,7 @@ Item {
         workspaceId: root.workspaceId
         active: root.active
         occupied: root.occupied
+        urgent: root.urgent
         vertical: root.vertical
 
         Text {

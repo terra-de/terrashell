@@ -36,6 +36,7 @@ Item {
                 vertical: root.vertical
                 active: workspaceModel.activeWorkspaceId === workspaceId
                 occupied: true
+                urgent: modelData.urgent
 
                 MouseArea {
                     anchors.fill: parent
