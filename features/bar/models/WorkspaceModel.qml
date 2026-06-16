@@ -27,6 +27,9 @@ Item {
         if (!workspace) {
             return "";
         }
+        if (workspace.id < 0) {
+            return workspace.name || "";
+        }
         if (workspace.name && workspace.name !== workspace.id.toString()) {
             return workspace.id.toString() + ": " + workspace.name;
         }
