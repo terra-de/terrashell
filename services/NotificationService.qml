@@ -25,7 +25,7 @@ Scope {
     readonly property alias activeModel: historyModel
     readonly property alias activeVisibleModel: historyVisibleModel
 
-    readonly property bool hasNotifications: root.history.length > 0
+    readonly property bool hasNotifications: root.unreadCount > 0
     readonly property bool hasPopups: popupVisibleModel.count > 0
     readonly property int maxPopupVisible: Math.max(1, Config.Config.notifications?.popup?.maxVisible ?? 4)
     readonly property int actionableAutoCloseMs: Math.max(0, Config.Config.notifications?.popup?.actionableAutoCloseMs ?? 600000)
