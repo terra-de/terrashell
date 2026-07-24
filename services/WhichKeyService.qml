@@ -131,6 +131,20 @@ Scope {
         root.openLeader();
     }
 
+    // Deferred dismiss timer — absorbs rapid submap enter/reset sequences.
+    // Hyprland can fire submap("") right after submap("leader_window") during
+    // a transition.  The delay lets a subsequent show() cancel the close.
+    Timer {
+        id: dismissTimer
+        interval: 120
+        repeat: false
+        onTriggered: {
+            if (!root.currentSubmap) {
+                root.closeAll();
+            }
+        }
+    }
+
     function close() {
         root.withTargetState(state => state.close());
     }
@@ -141,6 +155,11 @@ Scope {
                 entry.state.close();
             }
         }
+    }
+
+    function dismiss() {
+        root.currentSubmap = "";
+        dismissTimer.restart();
     }
 
     function isOpen() {
@@ -196,6 +215,7 @@ Scope {
     }
 
     function show(submap) {
+        dismissTimer.stop();
         root.currentSubmap = submap;
 
         if (root.bindsCache) {
@@ -209,6 +229,24 @@ Scope {
         if (root.bindsLoading) return;
         root.bindsLoading = true;
         fetchBindsProcess.exec(["/bin/sh", "-lc", "tctl binds list"]);
+    }
+
+    // Listen to Hyprland submap events directly via socket2, bypassing the
+    // tctl → msg IPC chain entirely.  This eliminates the async race where
+    // dismiss and show IPCs can arrive out of order.
+    Connections {
+        target: Hyprland
+
+        function onRawEvent(event) {
+            if (event.name === "submap") {
+                const name = event.data || "";
+                if (name) {
+                    root.show(name);
+                } else {
+                    root.dismiss();
+                }
+            }
+        }
     }
 
     IpcHandler {
@@ -231,8 +269,7 @@ Scope {
         }
 
         function dismiss(): void {
-            root.currentSubmap = "";
-            root.closeAll();
+            root.dismiss();
         }
 
         function reloadBinds(): void {
