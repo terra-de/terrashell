@@ -18,11 +18,14 @@ QtObject {
     property string title: "Leader"
     property var entries: []
 
-    function rebuildBinds(binds) {
+    function rebuildBinds(binds, submapTitle) {
         if (!Array.isArray(binds) || binds.length === 0) {
             return;
         }
         root.entries = binds;
+        if (typeof submapTitle === "string" && submapTitle.trim()) {
+            root.title = submapTitle.trim();
+        }
     }
 
     function close() {

@@ -19,6 +19,20 @@ Scope {
     property var entries: []
     property string currentSubmap: ""
 
+    // Cache of all hyprctl binds (loaded once, invalidated on config reload).
+    // Avoids async races from running hyprctl binds -j on every submap change.
+    property var bindsCache: null
+    property bool bindsLoading: false
+    property var bindsPending: []
+
+    // Derive a display title from a submap slug like "leader_window" -> "Window"
+    function titleForSubmap(slug) {
+        if (!slug) return "Leader";
+        var parts = slug.split("_");
+        var name = parts[parts.length - 1];
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
     function monitorKey(monitor) {
         if (!monitor) {
             return "";
@@ -105,14 +119,7 @@ Scope {
     }
 
     function openLeader() {
-        const state = root.targetState();
-        if (!state) {
-            return;
-        }
-
-        Services.PanelExclusivityService.requestOpen(root.panelId);
-        root.closeAll();
-        state.open = true;
+        root.show("leader");
     }
 
     function toggleLeader() {
@@ -159,6 +166,51 @@ Scope {
         commandProcess.exec(["/bin/sh", "-lc", normalized]);
     }
 
+    function applyBindsToState(submapName) {
+        const state = root.targetState();
+        if (!state || !root.bindsCache) return;
+
+        const filtered = root.bindsCache.filter(function(b) {
+            return (b.submap || "") === submapName;
+        });
+        const entries = filtered.map(function(b) {
+            return {
+                key: b.key,
+                description: b.description || b.dispatcher || "",
+                dispatcher: b.dispatcher || "",
+                icon: "",
+            };
+        });
+
+        const title = root.titleForSubmap(submapName);
+        state.rebuildBinds(WhichKeyTree.normalizeBinds(entries), title);
+        state.open = true;
+        Services.PanelExclusivityService.requestOpen(root.panelId);
+    }
+
+    function flushPending() {
+        while (root.bindsPending.length > 0) {
+            const pending = root.bindsPending.shift();
+            root.applyBindsToState(pending);
+        }
+    }
+
+    function show(submap) {
+        root.currentSubmap = submap;
+
+        if (root.bindsCache) {
+            root.applyBindsToState(submap);
+            return;
+        }
+
+        // Queue this submap for when the cache is ready
+        root.bindsPending.push(submap);
+
+        if (root.bindsLoading) return;
+        root.bindsLoading = true;
+        fetchBindsProcess.exec(["/bin/sh", "-lc", "tctl binds list"]);
+    }
+
     IpcHandler {
         target: "whichkey"
 
@@ -175,53 +227,36 @@ Scope {
         }
 
         function show(submap: string): void {
-            root.currentSubmap = submap;
-            fetchBindsProcess.exec(["/bin/sh", "-lc", "tctl binds list"]);
+            root.show(submap);
         }
 
         function dismiss(): void {
             root.currentSubmap = "";
             root.closeAll();
         }
+
+        function reloadBinds(): void {
+            root.bindsCache = null;
+        }
     }
 
-    // Fetches hyprctl binds -j, filters by current submap, feeds to which-key state
+    // Fetches hyprctl binds -j once, then caches the result for all subsequent
+    // show() calls.  Eliminates the async race where multiple rapid submap
+    // changes trigger overlapping process completions with stale submap state.
     Process {
         id: fetchBindsProcess
 
         stdout: StdioCollector {
             onStreamFinished: {
+                root.bindsLoading = false;
                 try {
                     const raw = this.text.trim();
-                    if (!raw) {
-                        return;
-                    }
+                    if (!raw) return;
 
-                    const allBinds = JSON.parse(raw);
-                    const submapName = root.currentSubmap;
-                    if (!submapName) {
-                        return;
-                    }
-
-                    // Pass raw hyprctl bind data to WhichKeyTree.normalizeBinds
-                    // which handles: key tokenization, escape/backspace filtering,
-                    // group detection from dispatcher type, icon parsing, sorting.
-                    const filtered = allBinds.filter(b => (b.submap || "") === submapName);
-                    const entries = filtered.map(b => ({
-                        key: b.key,
-                        description: b.description || b.dispatcher || "",
-                        dispatcher: b.dispatcher || "",
-                        icon: "",
-                    }));
-
-                    const state = root.targetState();
-                    if (state) {
-                        state.rebuildBinds(WhichKeyTree.normalizeBinds(entries));
-                        state.open = true;
-                        Services.PanelExclusivityService.requestOpen(root.panelId);
-                    }
+                    root.bindsCache = JSON.parse(raw);
+                    root.flushPending();
                 } catch (e) {
-                    console.warn("WhichKeyService: failed to process binds", e);
+                    console.warn("WhichKeyService: failed to parse binds", e);
                 }
             }
         }

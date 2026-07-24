@@ -18,6 +18,7 @@ TestCase {
     function init() {
         state.close();
         state.enabled = true;
+        state.entries = [];
     }
 
     function test_initialState() {
@@ -35,6 +36,16 @@ TestCase {
         compare(state.entries.length, 2);
         compare(state.entries[0].key, "y");
         compare(state.entries[1].key, "r");
+        // Title unchanged when no submapTitle arg
+        compare(state.title, "Leader");
+    }
+
+    function test_rebuildBinds_updatesTitle() {
+        state.rebuildBinds([
+            { key: "f", label: "F", description: "Toggle fullscreen", icon: "fullscreen", hasChildren: false },
+        ], "Window");
+        compare(state.entries.length, 1);
+        compare(state.title, "Window");
     }
 
     function test_rebuildBinds_emptyDoesNothing() {

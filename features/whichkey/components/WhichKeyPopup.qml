@@ -58,6 +58,7 @@ Primitives.SlideOutPanelWindow {
     closeDurationMs: root.panelCloseDurationMs
     WlrLayershell.namespace: "quickshell-whichkey"
     WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
     Primitives.SlideOutPanelSurface {
         id: mainPanel

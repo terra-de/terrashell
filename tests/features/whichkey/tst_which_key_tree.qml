@@ -23,14 +23,31 @@ TestCase {
 
     function test_normalizeBinds_detectsSubmap() {
         const result = WhichKeyTree.normalizeBinds([
-            { key: "u", description: "Utilities", dispatcher: "submap" },
-            { key: "y", description: "Toggle quickterm", dispatcher: "togglespecialworkspace" },
+            { key: "u", description: "@submap@Utilities", dispatcher: "__lua" },
+            { key: "y", description: "Toggle quickterm", dispatcher: "__lua" },
         ]);
         compare(result.length, 2);
         compare(result[0].key, "u");
         compare(result[0].hasChildren, true);
+        compare(result[0].description, "Utilities");
         compare(result[1].key, "y");
         compare(result[1].hasChildren, false);
+    }
+
+    function test_normalizeBinds_submapWithIconFallback() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "w", description: "@submap@Window", dispatcher: "__lua" },
+            { key: "r", description: "<refresh>Reload config", dispatcher: "__lua" },
+        ]);
+        compare(result.length, 2);
+        // Submap has no icon in description, should fall back to "folder"
+        compare(result[0].icon, "folder");
+        compare(result[0].hasChildren, true);
+        compare(result[0].description, "Window");
+        // Leaf with icon prefix
+        compare(result[1].icon, "refresh");
+        compare(result[1].hasChildren, false);
+        compare(result[1].description, "Reload config");
     }
 
     function test_normalizeBinds_parsesIconPrefix() {

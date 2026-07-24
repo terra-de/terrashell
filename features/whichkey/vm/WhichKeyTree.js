@@ -60,11 +60,15 @@ function normalizeBinds(rawBinds) {
 
         const description = typeof entry.description === "string" ? entry.description.trim() : "";
         const icon = typeof entry.icon === "string" ? entry.icon.trim() : "";
-        const dispatcher = typeof entry.dispatcher === "string" ? entry.dispatcher : "";
-        const isSubmap = dispatcher === "submap";
+
+        // Detect submaps via @submap@ prefix in description.
+        // hyprctl binds -j reports all Lua dispatchers as "__lua", so the
+        // old dispatcher === "submap" check never matches.
+        const isSubmap = description.startsWith("@submap@");
+        const rawDesc = isSubmap ? description.slice(8).trim() : description;
 
         // Parse <icon> prefix from description
-        let displayDesc = description;
+        let displayDesc = rawDesc;
         let displayIcon = icon;
         const iconMatch = displayDesc.match(/^<([^>]+)>(.*)/);
         if (iconMatch) {
