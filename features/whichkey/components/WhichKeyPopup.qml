@@ -136,6 +136,7 @@ Primitives.SlideOutPanelWindow {
 
                                     readonly property string bindKey: modelData.key || ""
                                     readonly property string bindLabel: modelData.label || ""
+                                    readonly property string bindKeyIcon: modelData.keyIcon || ""
                                     readonly property string bindDescription: modelData.description || ""
                                     readonly property string bindIcon: modelData.icon || "bolt"
                                     readonly property bool bindHasChildren: modelData.hasChildren ?? false
@@ -170,9 +171,11 @@ Primitives.SlideOutPanelWindow {
 
                                             Text {
                                                 anchors.centerIn: parent
-                                                text: delegateRoot.bindLabel
+                                                text: delegateRoot.bindKeyIcon || delegateRoot.bindLabel
                                                 color: TTheme.Palette.color("standard")
-                                                font.family: Config.Appearance.fontFamily
+                                                font.family: delegateRoot.bindKeyIcon
+                                                    ? Config.Appearance.iconFontFamily
+                                                    : Config.Appearance.fontFamily
                                                 font.pixelSize: root.keySize
                                                 font.weight: Font.DemiBold
                                             }
@@ -211,13 +214,37 @@ Primitives.SlideOutPanelWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.footerHeight
 
-                Text {
+                RowLayout {
                     anchors.centerIn: parent
-                    text: "Esc Close    Backspace Back"
-                    color: TTheme.Palette.color("muted")
-                    font.family: Config.Appearance.fontFamily
-                    font.pixelSize: Config.Appearance.fontSizeSmall
-                    font.weight: Font.Medium
+                    spacing: 24
+
+                    Text {
+                        text: "Esc Close"
+                        color: TTheme.Palette.color("muted")
+                        font.family: Config.Appearance.fontFamily
+                        font.pixelSize: Config.Appearance.fontSizeSmall
+                        font.weight: Font.Medium
+                    }
+
+                    RowLayout {
+                        spacing: 4
+
+                        Text {
+                            text: "backspace"
+                            color: TTheme.Palette.color("muted")
+                            font.family: Config.Appearance.iconFontFamily
+                            font.pixelSize: Config.Appearance.fontSizeSmall
+                            font.weight: Font.Medium
+                        }
+
+                        Text {
+                            text: "Back"
+                            color: TTheme.Palette.color("muted")
+                            font.family: Config.Appearance.fontFamily
+                            font.pixelSize: Config.Appearance.fontSizeSmall
+                            font.weight: Font.Medium
+                        }
+                    }
                 }
             }
         }

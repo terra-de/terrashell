@@ -19,6 +19,7 @@ TestCase {
         ]);
         compare(result.length, 1);
         compare(result[0].key, "y");
+        compare(result[0].keyIcon, "");
     }
 
     function test_normalizeBinds_detectsSubmap() {
@@ -66,5 +67,28 @@ TestCase {
         ]);
         compare(result.length, 1);
         compare(result[0].description, "First"); // first wins lowercase key
+    }
+
+    function test_normalizeBinds_keyIconMappings() {
+        const result = WhichKeyTree.normalizeBinds([
+            { key: "return", description: "Confirm" },
+            { key: "space", description: "Toggle" },
+            { key: "tab", description: "Switch" },
+            { key: "f", description: "Fullscreen" },
+            { key: "up", description: "Move up" },
+            { key: "page_up", description: "Scroll up" },
+            { key: "delete", description: "Delete" },
+        ]);
+        compare(result.length, 7);
+        compare(result[0].keyIcon, "keyboard_return");
+        compare(result[1].keyIcon, "space_bar");
+        compare(result[2].keyIcon, "keyboard_tab");
+        compare(result[3].keyIcon, ""); // "f" — no icon mapping
+        compare(result[4].keyIcon, "keyboard_arrow_up");
+        compare(result[5].keyIcon, "keyboard_page_up");
+        compare(result[6].keyIcon, "delete");
+        // Regular label still set for fallback
+        compare(result[0].label, "RETURN");
+        compare(result[3].label, "F");
     }
 }

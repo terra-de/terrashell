@@ -1,8 +1,30 @@
-function keyTokenLabel(token) {
-    if (token === "<enter>") {
-        return "keyboard_return";
-    }
+const KEY_ICONS = {
+    "return": "keyboard_return",
+    "enter": "keyboard_return",
+    "space": "space_bar",
+    "tab": "keyboard_tab",
+    "backspace": "backspace",
+    "delete": "delete",
+    "del": "delete",
+    "up": "keyboard_arrow_up",
+    "down": "keyboard_arrow_down",
+    "left": "keyboard_arrow_left",
+    "right": "keyboard_arrow_right",
+    "home": "keyboard_home",
+    "end": "keyboard_end",
+    "page_up": "keyboard_page_up",
+    "page_down": "keyboard_page_down",
+    "menu": "menu",
+    "caps_lock": "keyboard_capslock",
+    "insert": "keyboard",
+    "ins": "keyboard",
+};
 
+function keyTokenIcon(token) {
+    return KEY_ICONS[token] || "";
+}
+
+function keyTokenLabel(token) {
     return typeof token === "string" ? token.toUpperCase() : "";
 }
 
@@ -25,7 +47,7 @@ function parseKeySequence(value) {
 
 // Takes raw bind entries from hyprctl binds -j (filtered to current submap).
 // Returns a flat array of entry objects suitable for display:
-//   { key, label, description, icon, hasChildren }
+//   { key, label, keyIcon, description, icon, hasChildren }
 // Automatically excludes escape/backspace (shown in footer instead).
 // Marks entries as hasChildren=true when dispatcher is "submap".
 function normalizeBinds(rawBinds) {
@@ -76,9 +98,12 @@ function normalizeBinds(rawBinds) {
             displayDesc = iconMatch[2].trim();
         }
 
+        const token = tokens[0];
+
         result.push({
-            key: tokens[0],
-            label: keyTokenLabel(tokens[0]),
+            key: token,
+            label: keyTokenLabel(token),
+            keyIcon: keyTokenIcon(token),
             description: displayDesc || (isSubmap ? "Group" : "Action"),
             icon: displayIcon || (isSubmap ? "folder" : "bolt"),
             hasChildren: isSubmap,

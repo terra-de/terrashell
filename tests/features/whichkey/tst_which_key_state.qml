@@ -30,8 +30,8 @@ TestCase {
 
     function test_rebuildBinds() {
         state.rebuildBinds([
-            { key: "y", label: "Y", description: "Toggle quickterm", icon: "terminal", hasChildren: false },
-            { key: "r", label: "R", description: "Reload config", icon: "refresh", hasChildren: false },
+            { key: "y", label: "Y", keyIcon: "", description: "Toggle quickterm", icon: "terminal", hasChildren: false },
+            { key: "r", label: "R", keyIcon: "", description: "Reload config", icon: "refresh", hasChildren: false },
         ]);
         compare(state.entries.length, 2);
         compare(state.entries[0].key, "y");
@@ -42,10 +42,11 @@ TestCase {
 
     function test_rebuildBinds_updatesTitle() {
         state.rebuildBinds([
-            { key: "f", label: "F", description: "Toggle fullscreen", icon: "fullscreen", hasChildren: false },
+            { key: "return", label: "RETURN", keyIcon: "keyboard_return", description: "Confirm", icon: "check", hasChildren: false },
         ], "Window");
         compare(state.entries.length, 1);
         compare(state.title, "Window");
+        compare(state.entries[0].keyIcon, "keyboard_return");
     }
 
     function test_rebuildBinds_emptyDoesNothing() {
