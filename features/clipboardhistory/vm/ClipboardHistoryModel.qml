@@ -26,13 +26,5 @@ QtObject {
         ? root.filteredEntries[root.state.selectedIndex]
         : null
 
-    function activate(item) {
-        if (!item?.rawValue) {
-            return;
-        }
-
-        Services.ClipboardHistoryService.activateEntry(item.rawValue);
-    }
-
     onFilteredEntriesChanged: root.state.ensureSelectionInRange(root.totalItems)
 }

@@ -15,6 +15,8 @@ PanelWindow {
     property int closeDurationMs: 0
     readonly property bool presentationOpen: root.open || root._retainVisible
 
+    signal closeCompleted()
+
     default property alias windowContent: contentHost.data
     readonly property alias contentItem: contentHost
 
@@ -52,7 +54,10 @@ PanelWindow {
 
         interval: Math.max(0, root.closeDurationMs)
         repeat: false
-        onTriggered: root._retainVisible = false
+        onTriggered: {
+            root._retainVisible = false
+            root.closeCompleted()
+        }
     }
 
     Item {

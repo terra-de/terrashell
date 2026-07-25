@@ -28,6 +28,8 @@ Item {
     property var openCurve: Config.Motion.shellCurve
     property var closeCurve: Config.Motion.emphasizedAccelCurve
     property bool shadowEnabled: Config.Appearance.shadowEnabled
+
+    signal closeCompleted()
     property real shadowOffsetX: 0
     property real shadowOffsetY: Config.Appearance.shadowOffsetY
     readonly property bool presentationOpen: root.active || root._retainVisible
@@ -120,7 +122,10 @@ Item {
 
         interval: Math.max(0, root.closeDurationMs)
         repeat: false
-        onTriggered: root._retainVisible = false
+        onTriggered: {
+            root._retainVisible = false
+            root.closeCompleted()
+        }
     }
 
     onOpenChanged: {

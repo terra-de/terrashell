@@ -161,7 +161,20 @@ Scope {
         listProcess.exec(["cliphist", "list"]);
     }
 
-    function activateEntry(rawValue) {
+    function copyEntry(rawValue) {
+        const value = typeof rawValue === "string" ? rawValue : "";
+        if (!value) {
+            return;
+        }
+
+        copyProcess.exec([
+            "/bin/sh",
+            "-lc",
+            `cliphist decode ${root.shellQuote(value)} | sed -z 's/\\n$//' | wl-copy`
+        ]);
+    }
+
+    function typeEntry(rawValue) {
         const value = typeof rawValue === "string" ? rawValue : "";
         if (!value) {
             return;
@@ -171,6 +184,19 @@ Scope {
             "/bin/sh",
             "-lc",
             `cliphist decode ${root.shellQuote(value)} | sed -z 's/\\n$//' | wtype -`
+        ]);
+    }
+
+    function typeAndCopyEntry(rawValue) {
+        const value = typeof rawValue === "string" ? rawValue : "";
+        if (!value) {
+            return;
+        }
+
+        activateProcess.exec([
+            "/bin/bash",
+            "-c",
+            `cliphist decode ${root.shellQuote(value)} | tee >(wl-copy) | sed -z 's/\\n$//' | wtype -`
         ]);
     }
 
@@ -194,13 +220,26 @@ Scope {
     }
 
     Process {
+        id: copyProcess
+
+        stderr: StdioCollector {
+            onStreamFinished: {
+                const output = text.trim();
+                if (output) {
+                    console.warn("ClipboardHistoryService copy failed", output);
+                }
+            }
+        }
+    }
+
+    Process {
         id: activateProcess
 
         stderr: StdioCollector {
             onStreamFinished: {
                 const output = text.trim();
                 if (output) {
-                    console.warn("ClipboardHistoryService activate failed", output);
+                    console.warn("ClipboardHistoryService type failed", output);
                 }
             }
         }

@@ -3,6 +3,7 @@ import QtQuick
 import "../../config" as Config
 import "../../design/controls" as Controls
 import "../../services" as Services
+import "../../utils/PickerActivator.js" as PickerActivator
 import "../symbolpicker/vm" as SymbolPickerVm
 
 /*
@@ -36,8 +37,19 @@ Controls.SlideOutGridPanel {
         sourceEntries: Services.SymbolPickerService.emojiEntries
     }
 
-    onActivateRequested: item => {
-        root.state.close();
-        Services.SymbolPickerService.activateGlyph("emoji", item && item.glyph ? item.glyph : "");
+    onActivateRequested: (item, ctrl) => {
+        const text = item && item.glyph ? item.glyph : "";
+        if (!text) {
+            return;
+        }
+
+        if (ctrl) {
+            PickerActivator.activateCopy(root, () => Services.SymbolPickerService.copyGlyph(text));
+        } else {
+            PickerActivator.activateType(root,
+                () => Services.SymbolPickerService.copyGlyph(text),
+                () => Services.SymbolPickerService.typeGlyph("emoji", text)
+            );
+        }
     }
 }

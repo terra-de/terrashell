@@ -25,7 +25,7 @@ Primitives.SlideOutPanelWindow {
     property int itemSpacing: 8
     property int itemIconSize: 18
 
-    signal activateRequested(var item)
+    signal activateRequested(var item, bool ctrl)
 
     readonly property int contentPadding: Config.Config.appDrawer?.size?.padding ?? 24
     readonly property int contentSpacing: Config.Config.appDrawer?.size?.spacing ?? 24
@@ -57,12 +57,12 @@ Primitives.SlideOutPanelWindow {
         root.state.moveSelection(delta, root.totalItems, 1);
     }
 
-    function activateSelected() {
+    function activateSelected(ctrl) {
         if (!root.selectedItem) {
             return;
         }
 
-        root.activateRequested(root.selectedItem);
+        root.activateRequested(root.selectedItem, !!ctrl);
     }
 
     function ensureSelectedVisible() {
@@ -234,30 +234,30 @@ Primitives.SlideOutPanelWindow {
                             }
                         }
 
-                        Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Escape) {
-                                root.closePanel();
-                                event.accepted = true;
-                                return;
-                            }
+                                Keys.onPressed: event => {
+                                    if (event.key === Qt.Key_Escape) {
+                                        root.closePanel();
+                                        event.accepted = true;
+                                        return;
+                                    }
 
-                            if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
-                                root.moveSelection(-1);
-                                event.accepted = true;
-                                return;
-                            }
+                                    if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
+                                        root.moveSelection(-1);
+                                        event.accepted = true;
+                                        return;
+                                    }
 
-                            if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
-                                root.moveSelection(1);
-                                event.accepted = true;
-                                return;
-                            }
+                                    if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
+                                        root.moveSelection(1);
+                                        event.accepted = true;
+                                        return;
+                                    }
 
-                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                root.activateSelected();
-                                event.accepted = true;
-                            }
-                        }
+                                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                        root.activateSelected(event.modifiers & Qt.ControlModifier);
+                                        event.accepted = true;
+                                    }
+                                }
                     }
 
                     Text {
@@ -385,11 +385,11 @@ Primitives.SlideOutPanelWindow {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 acceptedButtons: Qt.LeftButton
-                                onClicked: {
+                                onClicked: mouse => {
                                     if (root.state) {
                                         root.state.selectedIndex = rowRoot.index;
                                     }
-                                    root.activateRequested(rowRoot.itemData);
+                                    root.activateRequested(rowRoot.itemData, !!(mouse.modifiers & Qt.ControlModifier));
                                 }
                             }
                         }
@@ -477,7 +477,7 @@ Primitives.SlideOutPanelWindow {
             }
 
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                root.activateSelected();
+                root.activateSelected(event.modifiers & Qt.ControlModifier);
                 event.accepted = true;
                 return;
             }

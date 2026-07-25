@@ -3,6 +3,7 @@ import QtQuick
 import "../../config" as Config
 import "../../design/controls" as Controls
 import "../../services" as Services
+import "../../utils/PickerActivator.js" as PickerActivator
 import "./vm" as BitwardenPickerVm
 import "./vm/BitwardenPickerLogic.js" as BitwardenPickerLogic
 
@@ -38,9 +39,15 @@ Controls.SlideOutListPanel {
         presentationOpen: root.presentationOpen
     }
 
-    onActivateRequested: item => {
-        pickerModel.activate(item);
-        root.state.close();
+    onActivateRequested: (item, ctrl) => {
+        if (ctrl) {
+            PickerActivator.activateCopy(root, () => Services.BitwardenService.copyEntry(root.state.mode, item));
+        } else {
+            PickerActivator.activateType(root,
+                () => Services.BitwardenService.copyEntry(root.state.mode, item),
+                () => Services.BitwardenService.typeEntry(root.state.mode, item)
+            );
+        }
     }
 
 }

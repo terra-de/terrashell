@@ -42,8 +42,6 @@ Scope {
     property var nerdFontUsageCounts: ({})
     property var emojiEntries: []
     property var nerdFontEntries: []
-    property string pendingActivationKind: ""
-    property string pendingActivationGlyph: ""
     property bool emojiDirty: false
     property bool nerdFontDirty: false
     property bool emojiLoadRequested: false
@@ -252,7 +250,6 @@ Scope {
     }
 
     function closeAll() {
-        root.cancelPendingActivation();
         for (const kind of ["emoji", "nerdfont"]) {
             for (const entry of root.entriesForKind(kind)) {
                 if (entry && entry.state) {
@@ -331,21 +328,31 @@ Scope {
         dataUpdateProcess.exec(["/bin/sh", "-lc", root.updaterCommand]);
     }
 
-    function activateGlyph(kind, glyph) {
+    function copyGlyph(glyph) {
         const text = typeof glyph === "string" ? glyph : "";
         if (!text) {
             return;
         }
 
-        root.pendingActivationKind = kind === "emoji" ? "emoji" : "nerdfont";
-        root.pendingActivationGlyph = text;
-        activationTimer.restart();
+        copyProcess.exec([
+            "/bin/sh",
+            "-lc",
+            `printf '%s' ${root.shellQuote(text)} | wl-copy`
+        ]);
     }
 
-    function cancelPendingActivation() {
-        activationTimer.stop();
-        root.pendingActivationKind = "";
-        root.pendingActivationGlyph = "";
+    function typeGlyph(kind, glyph) {
+        const text = typeof glyph === "string" ? glyph : "";
+        if (!text) {
+            return;
+        }
+
+        activateProcess.exec([
+            "/bin/sh",
+            "-lc",
+            `printf '%s' ${root.shellQuote(text)} | wtype -`
+        ]);
+        root.appendUsage(kind, text);
     }
 
     FileView {
@@ -409,29 +416,6 @@ Scope {
     }
 
     Timer {
-        id: activationTimer
-
-        interval: 45
-        repeat: false
-        onTriggered: {
-            const kind = root.pendingActivationKind;
-            const text = root.pendingActivationGlyph;
-            root.pendingActivationKind = "";
-            root.pendingActivationGlyph = "";
-            if (!text) {
-                return;
-            }
-
-            activateProcess.exec([
-                "/bin/sh",
-                "-lc",
-                `printf '%s' ${root.shellQuote(text)} | wtype -`
-            ]);
-            root.appendUsage(kind, text);
-        }
-    }
-
-    Timer {
         id: preloadTimer
 
         interval: 1500
@@ -465,6 +449,19 @@ Scope {
                 const output = text.trim();
                 if (output) {
                     console.warn("SymbolPickerService MRU append failed", output);
+                }
+            }
+        }
+    }
+
+    Process {
+        id: copyProcess
+
+        stderr: StdioCollector {
+            onStreamFinished: {
+                const output = text.trim();
+                if (output) {
+                    console.warn("SymbolPickerService copy failed", output);
                 }
             }
         }

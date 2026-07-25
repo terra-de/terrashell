@@ -46,9 +46,5 @@ QtObject {
         ? root.filteredEntries[root.state.selectedIndex]
         : null
 
-    function activate(item) {
-        Services.BitwardenService.activateEntry(root.state.mode, item);
-    }
-
     onFilteredEntriesChanged: root.state.ensureSelectionInRange(root.totalItems)
 }

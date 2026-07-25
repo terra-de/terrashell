@@ -476,7 +476,43 @@ Scope {
         ]);
     }
 
-    function activateEntry(rawMode, item) {
+    function copyEntry(rawMode, item) {
+        if (!item || !item.id) {
+            return;
+        }
+
+        const mode = BitwardenPickerLogic.normalizeMode(rawMode);
+        if (mode === "username") {
+            const username = typeof item.username === "string" ? item.username : "";
+            if (!username) {
+                return;
+            }
+
+            copyProcess.exec([
+                "/bin/sh",
+                "-lc",
+                "printf '%s' " + root.shellQuote(username) + " | wl-copy"
+            ]);
+            return;
+        }
+
+        if (mode === "totp") {
+            copyProcess.exec([
+                "/bin/sh",
+                "-lc",
+                "rbw code " + root.shellQuote(item.id) + " | sed -z 's/\\n$//' | wl-copy"
+            ]);
+            return;
+        }
+
+        copyProcess.exec([
+            "/bin/sh",
+            "-lc",
+            "rbw get " + root.shellQuote(item.id) + " | sed -z 's/\\n$//' | wl-copy"
+        ]);
+    }
+
+    function typeEntry(rawMode, item) {
         if (!item || !item.id) {
             return;
         }
@@ -864,13 +900,26 @@ Scope {
     }
 
     Process {
+        id: copyProcess
+
+        stderr: StdioCollector {
+            onStreamFinished: {
+                const output = text.trim();
+                if (output) {
+                    console.warn("BitwardenService copy failed", output);
+                }
+            }
+        }
+    }
+
+    Process {
         id: activateProcess
 
         stderr: StdioCollector {
             onStreamFinished: {
                 const output = text.trim();
                 if (output) {
-                    console.warn("BitwardenService activate failed", output);
+                    console.warn("BitwardenService type failed", output);
                 }
             }
         }

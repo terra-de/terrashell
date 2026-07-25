@@ -2,6 +2,8 @@ import QtQuick
 
 import "../../config" as Config
 import "../../design/controls" as Controls
+import "../../services" as Services
+import "../../utils/PickerActivator.js" as PickerActivator
 import "./vm" as ClipboardHistoryVm
 
 /*
@@ -26,8 +28,19 @@ Controls.SlideOutListPanel {
         presentationOpen: root.presentationOpen
     }
 
-    onActivateRequested: item => {
-        historyModel.activate(item);
-        root.state.close();
+    onActivateRequested: (item, ctrl) => {
+        const rawValue = item?.rawValue ?? "";
+        if (!rawValue) {
+            return;
+        }
+
+        if (ctrl) {
+            PickerActivator.activateCopy(root, () => Services.ClipboardHistoryService.copyEntry(rawValue));
+        } else {
+            PickerActivator.activateType(root,
+                () => {},
+                () => Services.ClipboardHistoryService.typeAndCopyEntry(rawValue)
+            );
+        }
     }
 }
