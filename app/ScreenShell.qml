@@ -12,6 +12,8 @@ import "../features/clipboardhistory/vm" as ClipboardHistoryVm
 import "../features/controlcenter" as ControlCenterFeature
 import "../features/controlcenter/vm" as ControlCenterVm
 import "../features/emoji" as EmojiFeature
+import "../features/notifications" as NotificationFeature
+import "../features/notifications/vm" as NotificationPanelVm
 import "../features/nerdfont" as NerdFontFeature
 import "../features/pickerlauncher" as PickerLauncherFeature
 import "../features/pickerlauncher/vm" as PickerLauncherVm
@@ -31,6 +33,10 @@ Item {
 
     ControlCenterVm.ControlCenterState {
         id: controlCenterState
+    }
+
+    NotificationPanelVm.NotificationPanelState {
+        id: notificationPanelState
     }
 
     AppDrawerVm.AppDrawerState {
@@ -63,6 +69,7 @@ Item {
 
     Component.onCompleted: {
         Services.ControlCenterService.registerScreenState(root.panelScreen, controlCenterState);
+        Services.NotificationPanelService.registerScreenState(root.panelScreen, notificationPanelState);
         Services.AppDrawerService.registerScreenState(root.panelScreen, appDrawerState);
         Services.BitwardenService.registerScreenState(root.panelScreen, bitwardenState);
         Services.BitwardenService.registerSetupState(root.panelScreen, bitwardenSetupState);
@@ -75,6 +82,7 @@ Item {
 
     Component.onDestruction: {
         Services.ControlCenterService.unregisterScreenState(controlCenterState);
+        Services.NotificationPanelService.unregisterScreenState(notificationPanelState);
         Services.AppDrawerService.unregisterScreenState(appDrawerState);
         Services.BitwardenService.unregisterScreenState(bitwardenState);
         Services.BitwardenService.unregisterSetupState(bitwardenSetupState);
@@ -88,6 +96,12 @@ Item {
     BarFeature.BarPanelFeature {
         panelScreen: root.panelScreen
         controlCenterState: controlCenterState
+        notificationPanelState: notificationPanelState
+    }
+
+    NotificationFeature.NotificationPanelFeature {
+        panelScreen: root.panelScreen
+        state: notificationPanelState
     }
 
     ControlCenterFeature.ControlCenterPanelFeature {

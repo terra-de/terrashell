@@ -182,36 +182,9 @@ Primitives.SlideOutPanelWindow {
                 onPowerAction: actionId => Services.PowerService.trigger(actionId)
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 1
-                color: TTheme.Palette.color("outline")
-                opacity: 0.6
-            }
-
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredHeight: 2
-
-                ControlCenterComponents.NotificationsPanel {
-                    anchors.fill: parent
-                    panelWidth: root.panelWidth
-                    open: root.presentationOpen
-                }
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 1
-                color: TTheme.Palette.color("outline")
-                opacity: 0.6
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredHeight: 1
 
                 ColumnLayout {
                     anchors.fill: parent

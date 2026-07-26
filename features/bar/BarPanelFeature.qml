@@ -17,6 +17,7 @@ PanelWindow {
 
     required property ShellScreen panelScreen
     required property var controlCenterState
+    required property var notificationPanelState
 
     readonly property string position: Config.Config.bar.position || "top"
     readonly property int thickness: Config.Config.bar.size?.thickness ?? 40
@@ -223,11 +224,18 @@ PanelWindow {
                         onClicked: Services.KeyboardService.toggle()
                     }
 
+                    BarComponents.NotificationButton {
+                        barHeight: root.thickness - root.padding * 2
+                        iconFont: Config.Appearance.iconFontFamily
+                        active: root.notificationPanelState?.open ?? false
+                        Layout.fillHeight: true
+                        onClicked: Services.NotificationPanelService.toggle()
+                    }
+
                     BarComponents.ControlCenterButton {
                         barHeight: root.thickness - root.padding * 2
                         iconFont: Config.Appearance.iconFontFamily
                         active: root.controlCenterState?.open ?? false
-                        hasPendingNotifications: Services.NotificationService.hasNotifications
                         Layout.fillHeight: true
                         onClicked: Services.ControlCenterService.toggle()
                     }

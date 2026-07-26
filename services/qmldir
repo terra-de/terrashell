@@ -17,3 +17,4 @@ singleton KeyboardService KeyboardService.qml
 singleton PanelExclusivityService PanelExclusivityService.qml
 singleton PickerLauncherService PickerLauncherService.qml
 singleton FileManagerService FileManagerService.qml
+singleton NotificationPanelService NotificationPanelService.qml
