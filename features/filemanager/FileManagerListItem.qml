@@ -28,11 +28,13 @@ Rectangle {
     radius: Config.Appearance.radiusSmall
     color: root.selected
         ? TTheme.Palette.color("c4")
-        : "transparent"
+        : TTheme.Palette.color("base")
 
     Behavior on color {
         ColorAnimation {
             duration: Config.Motion.shortDuration
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Config.Motion.standardCurve
         }
     }
 

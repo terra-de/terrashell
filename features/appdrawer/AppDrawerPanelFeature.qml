@@ -341,13 +341,15 @@ Primitives.SlideOutPanelWindow {
                                             ? TTheme.Palette.color("c1")
                                             : (mouseArea.pressed
                                                 ? TTheme.Palette.color("top")
-                                                : "transparent")
+                                                : TTheme.Palette.color("base"))
                                         border.width: tileRoot.selected ? 1 : 0
                                         border.color: tileRoot.selected ? TTheme.Palette.color("outline") : "transparent"
 
                                         Behavior on color {
                                             ColorAnimation {
                                                 duration: Config.Motion.shortDuration
+                                                easing.type: Easing.BezierSpline
+                                                easing.bezierCurve: Config.Motion.standardCurve
                                             }
                                         }
                                     }
