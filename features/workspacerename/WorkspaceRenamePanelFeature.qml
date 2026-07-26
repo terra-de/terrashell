@@ -164,7 +164,7 @@ Primitives.SlideOutPanelWindow {
                             font.weight: Font.Normal
                             verticalAlignment: TextInput.AlignVCenter
                             elide: Text.ElideRight
-                            visible: renameInput.text.length === 0 && !renameInput.activeFocus
+                            visible: root.open && renameInput.text.length === 0 && !renameInput.activeFocus
                         }
 
                         Keys.onPressed: event => {
