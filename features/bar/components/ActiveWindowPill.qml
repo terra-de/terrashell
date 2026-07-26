@@ -75,7 +75,7 @@ Item {
                 asynchronous: true
                 mipmap: true
 
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.alignment: Qt.AlignVCenter
                 opacity: model.hasActiveWindow ? 1 : 0
 
                 Behavior on opacity {
@@ -96,10 +96,9 @@ Item {
                 font.pixelSize: Config.Appearance.fontSizeSmall
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignLeft
-                anchors.verticalCenter: parent.verticalCenter
-                opacity: model.hasActiveWindow ? 1 : 0
-
+                Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
+                opacity: model.hasActiveWindow ? 1 : 0
 
                 Behavior on opacity {
                     Utils.Anim {

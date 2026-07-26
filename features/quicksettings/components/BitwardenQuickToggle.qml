@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import "../../../config" as Config
 import "file:/usr/lib/qt6/qml/TTheme" as TTheme
@@ -93,7 +94,7 @@ Item {
             }
         }
 
-        Row {
+        RowLayout {
             id: rowContent
 
             anchors.fill: parent
@@ -113,9 +114,9 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
             }
 
-            Column {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width - x
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
                 spacing: 2
 
                 Text {

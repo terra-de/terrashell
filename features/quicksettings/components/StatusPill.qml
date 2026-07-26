@@ -44,7 +44,7 @@ Rectangle {
             font.family: root.materialFont
             font.pixelSize: root.iconSize
             font.weight: Font.Medium
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
@@ -53,7 +53,7 @@ Rectangle {
             font.family: root.materialFont
             font.pixelSize: root.iconSize
             font.weight: Font.Medium
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
@@ -63,7 +63,7 @@ Rectangle {
             font.family: root.materialFont
             font.pixelSize: root.iconSize
             font.weight: Font.Medium
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
@@ -73,7 +73,7 @@ Rectangle {
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight
             font.pixelSize: Config.Appearance.fontSizeSmall
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
@@ -82,7 +82,7 @@ Rectangle {
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight
             font.pixelSize: Config.Appearance.fontSizeSmall
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
@@ -91,7 +91,7 @@ Rectangle {
             font.family: Config.Appearance.fontFamily
             font.weight: Config.Appearance.fontWeight
             font.pixelSize: Config.Appearance.fontSizeSmall
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
     }
 }
