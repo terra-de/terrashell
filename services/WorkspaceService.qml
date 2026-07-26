@@ -156,11 +156,11 @@ Scope {
             root.closeRenamePanel();
         }
 
-        function renameWorkspace(id, name): void {
+        function renameWorkspace(id: int, name: string): void {
             root.renameWorkspace(id, name);
         }
 
-        function activateWorkspace(id): void {
+        function activateWorkspace(id: int): void {
             root.activateWorkspace(id);
         }
     }

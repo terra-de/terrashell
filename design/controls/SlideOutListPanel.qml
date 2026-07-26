@@ -92,17 +92,6 @@ Primitives.SlideOutPanelWindow {
         root.ensureSelectedVisible();
     }
 
-    Keys.onPressed: event => {
-        if (!root.state?.open) {
-            return;
-        }
-
-        if (event.key === Qt.Key_Escape) {
-            root.closePanel();
-            event.accepted = true;
-        }
-    }
-
     Timer {
         id: focusTimer
 

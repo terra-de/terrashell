@@ -208,7 +208,7 @@ QtObject {
             tileHeight: 76,
             tileSpacing: 12,
             glyphSize: 30,
-            fontFamily: ""
+            fontFamily: "Noto Color Emoji"
         })
     })
 

@@ -41,5 +41,5 @@ QtObject {
         }
     }
 
-    Component.onCompleted: root.configChanged(config)
+    Component.onCompleted: root.configChanged()
 }

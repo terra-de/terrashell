@@ -133,23 +133,6 @@ Primitives.SlideOutPanelWindow {
         }
     }
 
-    Keys.onPressed: event => {
-        if (!root.state.open) {
-            return;
-        }
-
-        if (event.key === Qt.Key_Escape && contextMenu.open) {
-            root.closeContextMenu();
-            event.accepted = true;
-            return;
-        }
-
-        if (event.key === Qt.Key_Escape) {
-            root.state.close();
-            event.accepted = true;
-        }
-    }
-
     Timer {
         id: focusTimer
 

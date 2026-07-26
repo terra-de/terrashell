@@ -82,17 +82,25 @@ Primitives.SlideOutPanelWindow {
     onOpenChanged: {
         if (root.open) {
             Services.BitwardenService.refreshVaultState();
+            keyRouter.forceActiveFocus();
         }
     }
 
-    Keys.onPressed: event => {
-        if (!root.state.open) {
-            return;
-        }
+    Item {
+        id: keyRouter
 
-        if (event.key === Qt.Key_Escape) {
-            root.state.close();
-            event.accepted = true;
+        anchors.fill: parent
+        focus: root.state.open
+
+        Keys.onPressed: event => {
+            if (!root.state.open) {
+                return;
+            }
+
+            if (event.key === Qt.Key_Escape) {
+                root.state.close();
+                event.accepted = true;
+            }
         }
     }
 
