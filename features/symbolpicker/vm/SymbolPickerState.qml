@@ -12,17 +12,17 @@ QtObject {
     property bool open: false
     property int edgeInset: 0
     property string query: ""
-    property int selectedIndex: -1
+    property int selectedIndex: 0
 
     function resetNavigation() {
         root.selectedIndex = 0;
     }
 
     function toggle() {
-        root.open = !root.open;
-        if (!root.open) {
-            root.query = "";
-            root.resetNavigation();
+        if (root.open) {
+            root.close();
+        } else {
+            root.openPanel();
         }
     }
 
@@ -33,6 +33,8 @@ QtObject {
     }
 
     function openPanel() {
+        root.query = "";
+        root.resetNavigation();
         root.open = true;
     }
 

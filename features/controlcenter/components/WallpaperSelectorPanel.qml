@@ -358,6 +358,30 @@ Item {
         if (!root.open || root.wallpapers.length <= 0) {
             return;
         }
+
+        if ((event.modifiers & Qt.ControlModifier)) {
+            if (event.key === Qt.Key_P || event.key === Qt.Key_K) {
+                root.moveSelection(-1);
+                event.accepted = true;
+                return;
+            }
+            if (event.key === Qt.Key_N || event.key === Qt.Key_J) {
+                root.moveSelection(1);
+                event.accepted = true;
+                return;
+            }
+            if (event.key === Qt.Key_H) {
+                root.moveSelection(-1);
+                event.accepted = true;
+                return;
+            }
+            if (event.key === Qt.Key_L) {
+                root.moveSelection(1);
+                event.accepted = true;
+                return;
+            }
+        }
+
         if (event.key === Qt.Key_Up) {
             root.moveSelection(-1);
             event.accepted = true;

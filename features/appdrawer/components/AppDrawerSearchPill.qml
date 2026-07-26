@@ -65,6 +65,29 @@ Rectangle {
                     return;
                 }
 
+                if ((event.modifiers & Qt.ControlModifier)) {
+                    if (event.key === Qt.Key_P || event.key === Qt.Key_K) {
+                        root.upPressed();
+                        event.accepted = true;
+                        return;
+                    }
+                    if (event.key === Qt.Key_N || event.key === Qt.Key_J) {
+                        root.downPressed();
+                        event.accepted = true;
+                        return;
+                    }
+                    if (event.key === Qt.Key_H) {
+                        root.leftPressed();
+                        event.accepted = true;
+                        return;
+                    }
+                    if (event.key === Qt.Key_L) {
+                        root.rightPressed();
+                        event.accepted = true;
+                        return;
+                    }
+                }
+
                 if (event.key === Qt.Key_Left) {
                     root.leftPressed();
                     event.accepted = true;

@@ -236,6 +236,29 @@ Primitives.SlideOutPanelWindow {
                                         return;
                                     }
 
+                                    if ((event.modifiers & Qt.ControlModifier)) {
+                                        if (event.key === Qt.Key_P || event.key === Qt.Key_K) {
+                                            root.moveSelection(-root.columns);
+                                            event.accepted = true;
+                                            return;
+                                        }
+                                        if (event.key === Qt.Key_N || event.key === Qt.Key_J) {
+                                            root.moveSelection(root.columns);
+                                            event.accepted = true;
+                                            return;
+                                        }
+                                        if (event.key === Qt.Key_H) {
+                                            root.moveSelection(-1);
+                                            event.accepted = true;
+                                            return;
+                                        }
+                                        if (event.key === Qt.Key_L) {
+                                            root.moveSelection(1);
+                                            event.accepted = true;
+                                            return;
+                                        }
+                                    }
+
                                     if (event.key === Qt.Key_Left) {
                                         root.moveSelection(-1);
                                         event.accepted = true;
@@ -457,6 +480,29 @@ Primitives.SlideOutPanelWindow {
                 root.closePanel();
                 event.accepted = true;
                 return;
+            }
+
+            if ((event.modifiers & Qt.ControlModifier)) {
+                if (event.key === Qt.Key_P || event.key === Qt.Key_K) {
+                    root.moveSelection(-root.columns);
+                    event.accepted = true;
+                    return;
+                }
+                if (event.key === Qt.Key_N || event.key === Qt.Key_J) {
+                    root.moveSelection(root.columns);
+                    event.accepted = true;
+                    return;
+                }
+                if (event.key === Qt.Key_H) {
+                    root.moveSelection(-1);
+                    event.accepted = true;
+                    return;
+                }
+                if (event.key === Qt.Key_L) {
+                    root.moveSelection(1);
+                    event.accepted = true;
+                    return;
+                }
             }
 
             if (event.key === Qt.Key_Left) {

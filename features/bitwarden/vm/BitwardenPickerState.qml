@@ -14,7 +14,7 @@ QtObject {
     property bool open: false
     property int edgeInset: 0
     property string query: ""
-    property int selectedIndex: -1
+    property int selectedIndex: 0
     property string mode: "password"
 
     function resetNavigation() {
