@@ -13,6 +13,8 @@ import "../features/controlcenter" as ControlCenterFeature
 import "../features/controlcenter/vm" as ControlCenterVm
 import "../features/emoji" as EmojiFeature
 import "../features/nerdfont" as NerdFontFeature
+import "../features/pickerlauncher" as PickerLauncherFeature
+import "../features/pickerlauncher/vm" as PickerLauncherVm
 import "../features/symbolpicker/vm" as SymbolPickerVm
 import "../features/whichkey" as WhichKeyFeature
 import "../features/workspacerename" as WorkspaceRenameFeature
@@ -55,6 +57,10 @@ Item {
         id: nerdFontState
     }
 
+    PickerLauncherVm.PickerLauncherState {
+        id: pickerLauncherState
+    }
+
     Component.onCompleted: {
         Services.ControlCenterService.registerScreenState(root.panelScreen, controlCenterState);
         Services.AppDrawerService.registerScreenState(root.panelScreen, appDrawerState);
@@ -64,6 +70,7 @@ Item {
         Services.WorkspaceService.registerScreenState(root.panelScreen, workspaceRenamePanel);
         Services.SymbolPickerService.registerScreenState("emoji", root.panelScreen, emojiState);
         Services.SymbolPickerService.registerScreenState("nerdfont", root.panelScreen, nerdFontState);
+        Services.PickerLauncherService.registerScreenState(root.panelScreen, pickerLauncherState);
     }
 
     Component.onDestruction: {
@@ -75,6 +82,7 @@ Item {
         Services.WorkspaceService.unregisterScreenState(workspaceRenamePanel);
         Services.SymbolPickerService.unregisterScreenState("emoji", emojiState);
         Services.SymbolPickerService.unregisterScreenState("nerdfont", nerdFontState);
+        Services.PickerLauncherService.unregisterScreenState(pickerLauncherState);
     }
 
     BarFeature.BarPanelFeature {
@@ -115,6 +123,11 @@ Item {
     NerdFontFeature.NerdFontPanelFeature {
         panelScreen: root.panelScreen
         state: nerdFontState
+    }
+
+    PickerLauncherFeature.PickerLauncherPanelFeature {
+        panelScreen: root.panelScreen
+        state: pickerLauncherState
     }
 
     WhichKeyFeature.WhichKeyLayerFeature {

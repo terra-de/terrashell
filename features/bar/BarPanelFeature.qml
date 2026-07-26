@@ -60,45 +60,6 @@ PanelWindow {
     readonly property real cornerRadius: Math.min(Config.Appearance.radiusLarge, thickness * 0.5)
     readonly property color barColor: TTheme.Palette.color("base")
 
-    function openPickerMenu(buttonItem, mouseX, mouseY) {
-        if (pickerMenu.open) {
-            pickerMenu.closeMenu();
-            return;
-        }
-
-        const point = buttonItem.mapToItem(contentLayer, mouseX, mouseY);
-        const desiredLeft = Math.max(root.padding, Math.min(root.width - pickerMenu.popupWidth - root.padding, Math.round(point.x - 12)));
-        pickerMenu.rightMargin = Math.max(root.padding, Math.round(root.width - desiredLeft - pickerMenu.popupWidth));
-        pickerMenu.topMargin = Math.max(0, Math.round(root.marginTop + root.thickness - 2));
-        pickerMenu.open = true;
-    }
-
-    function dispatchPickerAction(actionId) {
-        if (actionId === "password") {
-            Services.BitwardenService.toggleMode("password");
-            return;
-        }
-        if (actionId === "username") {
-            Services.BitwardenService.toggleMode("username");
-            return;
-        }
-        if (actionId === "totp") {
-            Services.BitwardenService.toggleMode("totp");
-            return;
-        }
-        if (actionId === "clipboard") {
-            Services.ClipboardHistoryService.toggle();
-            return;
-        }
-        if (actionId === "emoji") {
-            Services.SymbolPickerService.toggleKind("emoji");
-            return;
-        }
-        if (actionId === "nerdfont") {
-            Services.SymbolPickerService.toggleKind("nerdfont");
-        }
-    }
-
     Item {
         id: shadowShape
 
@@ -213,10 +174,10 @@ PanelWindow {
                         visible: Config.Config.bar.searchMenu?.enabled ?? true
                         barHeight: root.thickness - root.padding * 2
                         iconFont: Config.Appearance.iconFontFamily
-                        active: pickerMenu.open
+                        active: Services.PickerLauncherService.isTargetOpen()
                         Layout.fillHeight: true
                         Layout.preferredWidth: visible ? implicitWidth : 0
-                        onClicked: mouse => root.openPickerMenu(this, mouse.x, mouse.y)
+                        onClicked: Services.PickerLauncherService.toggle()
                     }
 
                     BarComponents.AppDrawerButton {
@@ -276,10 +237,4 @@ PanelWindow {
 
     }
 
-    BarComponents.PickerContextMenu {
-        id: pickerMenu
-
-        screen: root.panelScreen
-        onActionRequested: actionId => root.dispatchPickerAction(actionId)
-    }
 }
