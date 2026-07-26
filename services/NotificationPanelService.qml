@@ -149,6 +149,32 @@ Scope {
         return state ? state.open : false;
     }
 
+    function swipeLeft() {
+        // swipe from right to left
+        if (Services.AppDrawerService.isTargetOpen()) {
+            Services.AppDrawerService.close();
+            return;
+        }
+
+        root.open();
+    }
+
+    function swipeRight() {
+        // swipe from left to right
+        if (root.isTargetOpen()) {
+            root.close();
+            return;
+        }
+
+        Services.AppDrawerService.open();
+    }
+
+    function swipeUp() {
+    }
+
+    function swipeDown() {
+    }
+
     IpcHandler {
         target: "notificationpanel"
 
@@ -162,6 +188,26 @@ Scope {
 
         function close(): void {
             root.close();
+        }
+    }
+
+    IpcHandler {
+        target: "shellgestures"
+
+        function swipeLeft(): void {
+            root.swipeLeft();
+        }
+
+        function swipeRight(): void {
+            root.swipeRight();
+        }
+
+        function swipeUp(): void {
+            root.swipeUp();
+        }
+
+        function swipeDown(): void {
+            root.swipeDown();
         }
     }
 
