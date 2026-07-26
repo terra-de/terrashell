@@ -69,7 +69,13 @@ QtObject {
         }
 
         const offset = Math.floor(Number(delta) || 0);
-        if (!offset && root.selectedIndex >= 0) {
+
+        if (root.selectedIndex < 0) {
+            root.selectedIndex = offset >= 0 ? 0 : totalItems - 1;
+            return;
+        }
+
+        if (!offset) {
             return;
         }
 
