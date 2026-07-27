@@ -64,6 +64,11 @@ Primitives.SlideOutPanelWindow {
         }
     }
 
+    onCloseCompleted: {
+        root.state.sliderOnly = false;
+        root.state.sliderTriggerCount = 0;
+    }
+
     Item {
         id: keyRouter
 

@@ -19,8 +19,6 @@ QtObject {
 
     function close() {
         root.open = false;
-        root.sliderOnly = false;
-        root.sliderTriggerCount = 0;
     }
 
     function openPanel() {
