@@ -170,9 +170,17 @@ Scope {
     }
 
     function swipeUp() {
+        if (Services.MediaPlayerService.isTargetOpen()) {
+            Services.MediaPlayerService.close();
+        }
     }
 
     function swipeDown() {
+        if (Services.MediaPlayerService.isTargetOpen()) {
+            return;
+        }
+
+        Services.MediaPlayerService.open();
     }
 
     IpcHandler {
