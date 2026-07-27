@@ -8,6 +8,7 @@ QtObject {
     property bool open: false
     property int edgeInset: 0
     property bool sliderOnly: false
+    property int sliderTriggerCount: 0
 
     function toggle() {
         root.open = !root.open;
@@ -19,6 +20,7 @@ QtObject {
     function close() {
         root.open = false;
         root.sliderOnly = false;
+        root.sliderTriggerCount = 0;
     }
 
     function openPanel() {
@@ -29,5 +31,6 @@ QtObject {
     function openSlidersOnly() {
         root.open = true;
         root.sliderOnly = true;
+        root.sliderTriggerCount++;
     }
 }

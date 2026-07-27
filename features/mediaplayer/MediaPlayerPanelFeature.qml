@@ -55,9 +55,11 @@ Primitives.SlideOutPanelWindow {
         }
     }
 
-    property bool _watchSliderOnly: root.state?.sliderOnly ?? false
-    on_WatchSliderOnlyChanged: {
-        if (!root._watchSliderOnly) {
+    property int _watchTriggerCount: root.state?.sliderTriggerCount ?? 0
+    on_WatchTriggerCountChanged: {
+        if (root.state?.sliderOnly) {
+            hideTimer.restart();
+        } else {
             hideTimer.stop();
         }
     }
