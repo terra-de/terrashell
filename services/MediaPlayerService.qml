@@ -33,6 +33,7 @@ Scope {
     readonly property bool isPlaying: root.playbackState === Mpris.MprisPlaybackState.Playing
     readonly property bool hasActivePlayer: root.activePlayer !== null
     readonly property double volumeLevel: Pipewire?.defaultAudioSink?.audio?.volume ?? 0
+    readonly property bool volumeMuted: Pipewire?.defaultAudioSink?.audio?.muted ?? false
 
     function monitorKey(monitor) {
         if (!monitor) {
@@ -297,6 +298,8 @@ Scope {
 
     property bool _volumeTracked: false
     property double _previousVolume: 0
+    property bool _mutedTracked: false
+    property bool _previousMuted: false
     property bool _brightnessTracked: false
     property double _previousBrightness: 0
 
@@ -317,6 +320,19 @@ Scope {
         }
         if (Math.abs(level - root._previousVolume) > 0.005) {
             root._previousVolume = level;
+            root.openSlidersOnFocused();
+        }
+    }
+
+    onVolumeMutedChanged: {
+        const muted = Pipewire.defaultAudioSink?.audio?.muted ?? false;
+        if (!root._mutedTracked) {
+            root._previousMuted = muted;
+            root._mutedTracked = true;
+            return;
+        }
+        if (muted !== root._previousMuted) {
+            root._previousMuted = muted;
             root.openSlidersOnFocused();
         }
     }
