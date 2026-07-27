@@ -18,3 +18,5 @@ singleton PanelExclusivityService PanelExclusivityService.qml
 singleton PickerLauncherService PickerLauncherService.qml
 singleton FileManagerService FileManagerService.qml
 singleton NotificationPanelService NotificationPanelService.qml
+singleton MediaPlayerService MediaPlayerService.qml
+singleton MicVolumeService MicVolumeService.qml

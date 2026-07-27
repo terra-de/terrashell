@@ -22,8 +22,6 @@ ShellRoot {
         }
     }
 
-    OsdFeature.VolumePopupLayerFeature {}
-    OsdFeature.BrightnessPopupLayerFeature {}
     NotificationFeature.NotificationPopupLayerFeature {}
     ChromeFeature.ScreenCornerCutoutsLayerFeature {}
 }

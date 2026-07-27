@@ -18,6 +18,7 @@ PanelWindow {
     required property ShellScreen panelScreen
     required property var controlCenterState
     required property var notificationPanelState
+    required property var mediaPlayerState
 
     readonly property string position: Config.Config.bar.position || "top"
     readonly property int thickness: Config.Config.bar.size?.thickness ?? 40
@@ -215,6 +216,14 @@ PanelWindow {
                         barHeight: root.thickness - root.padding * 2
                         spacing: root.spacing
                         Layout.fillHeight: true
+                    }
+
+                    BarComponents.NowPlayingPill {
+                        barHeight: root.thickness - root.padding * 2
+                        iconFont: Config.Appearance.iconFontFamily
+                        active: root.mediaPlayerState?.open ?? false
+                        Layout.fillHeight: true
+                        onClicked: Services.MediaPlayerService.toggle()
                     }
 
                     BarComponents.KeyboardToggle {

@@ -18,6 +18,8 @@ import "../features/nerdfont" as NerdFontFeature
 import "../features/pickerlauncher" as PickerLauncherFeature
 import "../features/pickerlauncher/vm" as PickerLauncherVm
 import "../features/symbolpicker/vm" as SymbolPickerVm
+import "../features/mediaplayer" as MediaPlayerFeature
+import "../features/mediaplayer/vm" as MediaPlayerVm
 import "../features/whichkey" as WhichKeyFeature
 import "../features/workspacerename" as WorkspaceRenameFeature
 
@@ -37,6 +39,10 @@ Item {
 
     NotificationPanelVm.NotificationPanelState {
         id: notificationPanelState
+    }
+
+    MediaPlayerVm.MediaPlayerState {
+        id: mediaPlayerState
     }
 
     AppDrawerVm.AppDrawerState {
@@ -68,6 +74,7 @@ Item {
     }
 
     Component.onCompleted: {
+        Services.MediaPlayerService.registerScreenState(root.panelScreen, mediaPlayerState);
         Services.ControlCenterService.registerScreenState(root.panelScreen, controlCenterState);
         Services.NotificationPanelService.registerScreenState(root.panelScreen, notificationPanelState);
         Services.AppDrawerService.registerScreenState(root.panelScreen, appDrawerState);
@@ -81,6 +88,7 @@ Item {
     }
 
     Component.onDestruction: {
+        Services.MediaPlayerService.unregisterScreenState(mediaPlayerState);
         Services.ControlCenterService.unregisterScreenState(controlCenterState);
         Services.NotificationPanelService.unregisterScreenState(notificationPanelState);
         Services.AppDrawerService.unregisterScreenState(appDrawerState);
@@ -97,6 +105,12 @@ Item {
         panelScreen: root.panelScreen
         controlCenterState: controlCenterState
         notificationPanelState: notificationPanelState
+        mediaPlayerState: mediaPlayerState
+    }
+
+    MediaPlayerFeature.MediaPlayerPanelFeature {
+        panelScreen: root.panelScreen
+        state: mediaPlayerState
     }
 
     NotificationFeature.NotificationPanelFeature {
