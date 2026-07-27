@@ -122,12 +122,8 @@ Primitives.SlideOutPanelWindow {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: root.state.sliderOnly ? 0 : implicitHeight
-                Layout.maximumHeight: root.state.sliderOnly ? 0 : implicitHeight
-                clip: true
+                Layout.fillHeight: true
                 visible: !root.state.sliderOnly
-
-                implicitHeight: contentArea.implicitHeight
 
                 ColumnLayout {
                     id: contentArea
@@ -138,7 +134,6 @@ Primitives.SlideOutPanelWindow {
                     Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        Layout.preferredHeight: Math.round(contentArea.implicitHeight * 0.55)
 
                         RowLayout {
                             anchors.centerIn: parent
