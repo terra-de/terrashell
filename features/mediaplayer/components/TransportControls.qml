@@ -89,6 +89,8 @@ Item {
     }
 
     component TransportButton: Item {
+        id: transportButton
+
         property string icon_: ""
         property bool enabled_: true
         property int buttonSize: 36
@@ -96,9 +98,9 @@ Item {
 
         signal clicked()
 
-        width: root.buttonSize
-        height: root.buttonSize
-        opacity: root.enabled_ ? 1 : 0.4
+        width: transportButton.buttonSize
+        height: transportButton.buttonSize
+        opacity: transportButton.enabled_ ? 1 : 0.4
         Layout.alignment: Qt.AlignVCenter
 
         Rectangle {
@@ -108,16 +110,16 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                text: root.icon_
+                text: transportButton.icon_
                 font.family: Config.Appearance.iconFontFamily
-                font.pixelSize: root.iconSize
+                font.pixelSize: transportButton.iconSize
                 color: TTheme.Palette.color("standard")
             }
 
             MouseArea {
                 anchors.fill: parent
-                enabled: root.enabled_
-                onClicked: root.clicked()
+                enabled: transportButton.enabled_
+                onClicked: transportButton.clicked()
             }
 
             Behavior on color {
