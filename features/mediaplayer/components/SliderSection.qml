@@ -87,6 +87,14 @@ Item {
                 width: parent.width * sliderBar.level
                 radius: height / 2
                 color: TTheme.Palette.color("c4")
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: Config.Motion.shortDuration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Config.Motion.standardCurve
+                    }
+                }
             }
 
             Text {
