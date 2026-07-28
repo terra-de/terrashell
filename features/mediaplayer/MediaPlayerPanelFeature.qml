@@ -143,7 +143,9 @@ Primitives.SlideOutPanelWindow {
                                 id: albumArt
 
                                 artUrl: Services.MediaPlayerService.trackArtUrl
-                                artworkSize: Math.min(200, Math.round(parent.height * 0.85))
+                                artworkSize: Math.min(200, Math.round(root.panelHeight * 0.4))
+                                Layout.preferredWidth: artworkSize
+                                Layout.preferredHeight: artworkSize
                                 Layout.alignment: Qt.AlignVCenter
                             }
                         }
