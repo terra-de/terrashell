@@ -14,7 +14,7 @@ Primitives.SlideOutPanelWindow {
     required property MediaPlayerVm.MediaPlayerState state
 
     readonly property int panelHeight: Config.Config.mediaplayer?.size?.height ?? 420
-    readonly property int sliderSectionHeight: Config.Config.mediaplayer?.size?.sliderSectionHeight ?? 110
+    readonly property int sliderSectionHeight: Config.Config.mediaplayer?.size?.sliderSectionHeight ?? 56
     readonly property int contentPadding: Config.Config.mediaplayer?.size?.padding ?? 16
     readonly property int contentSpacing: Config.Config.mediaplayer?.size?.spacing ?? 12
     readonly property int overshootTopPadding: Config.Config.mediaplayer?.size?.overshootPadding
