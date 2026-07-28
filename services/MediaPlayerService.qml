@@ -265,35 +265,75 @@ Scope {
         });
     }
 
-    function onPlayersChanged() {
-        const newPlayers = Mpris.Mpris.players;
-
-        for (const player of newPlayers) {
-            if (Array.isArray(players) && players.includes(player)) {
-                continue;
-            }
-
+    function _initPlayers() {
+        const players = Mpris.Mpris.players.values;
+        for (const player of players) {
+            console.warn("MediaPlayerService: Connecting to", player.identity || player.dbusName);
             root.connectToPlayer(player);
         }
-
-        root.players = newPlayers.slice();
-
-        if (!root.activePlayer && newPlayers.length > 0) {
-            root.activePlayer = newPlayers[0];
-            root.trackTitle = root.activePlayer.trackTitle;
-            root.trackArtist = root.activePlayer.trackArtist;
-            root.trackAlbum = root.activePlayer.trackAlbum;
-            root.trackArtUrl = root.activePlayer.trackArtUrl;
-            root.position = root.activePlayer.position;
-            root.length = root.activePlayer.length;
-            root.volume = root.activePlayer.volume;
-            root.canGoNext = root.activePlayer.canGoNext;
-            root.canGoPrevious = root.activePlayer.canGoPrevious;
-            root.canSeek = root.activePlayer.canSeek;
-            root.canPlay = root.activePlayer.canPlay;
-            root.canPause = root.activePlayer.canPause;
-            root.playbackState = root.activePlayer.playbackState;
+        root.players = players;
+        if (players.length > 0) {
+            root._switchActivePlayer(players[0]);
         }
+    }
+
+    function _onPlayerConnected(player) {
+        console.warn("MediaPlayerService: Player connected", player.identity || player.dbusName);
+        root.connectToPlayer(player);
+        root.players = Mpris.Mpris.players.values;
+        if (!root.activePlayer) {
+            root._switchActivePlayer(player);
+        } else if (root.playbackState === Mpris.MprisPlaybackState.Stopped
+                   && player.playbackState === Mpris.MprisPlaybackState.Playing) {
+            root._switchActivePlayer(player);
+        }
+    }
+
+    function _onPlayerDisconnected(player) {
+        console.warn("MediaPlayerService: Player disconnected", player.identity || player.dbusName);
+        root.players = Mpris.Mpris.players.values;
+        if (root.activePlayer === player) {
+            const remaining = root.players;
+            if (remaining.length > 0) {
+                root._switchActivePlayer(remaining[0]);
+            } else {
+                root.activePlayer = null;
+                root._clearActivePlayerProps();
+            }
+        }
+    }
+
+    function _switchActivePlayer(player) {
+        root.activePlayer = player;
+        root.trackTitle = player?.trackTitle ?? "";
+        root.trackArtist = player?.trackArtist ?? "";
+        root.trackAlbum = player?.trackAlbum ?? "";
+        root.trackArtUrl = player?.trackArtUrl ?? "";
+        root.position = player?.position ?? 0;
+        root.length = player?.length ?? 0;
+        root.volume = player?.volume ?? 0;
+        root.canGoNext = player?.canGoNext ?? false;
+        root.canGoPrevious = player?.canGoPrevious ?? false;
+        root.canSeek = player?.canSeek ?? false;
+        root.canPlay = player?.canPlay ?? false;
+        root.canPause = player?.canPause ?? false;
+        root.playbackState = player?.playbackState ?? Mpris.MprisPlaybackState.Stopped;
+    }
+
+    function _clearActivePlayerProps() {
+        root.trackTitle = "";
+        root.trackArtist = "";
+        root.trackAlbum = "";
+        root.trackArtUrl = "";
+        root.position = 0;
+        root.length = 0;
+        root.volume = 0;
+        root.canGoNext = false;
+        root.canGoPrevious = false;
+        root.canSeek = false;
+        root.canPlay = false;
+        root.canPause = false;
+        root.playbackState = Mpris.MprisPlaybackState.Stopped;
     }
 
     property bool _volumeTracked: false
@@ -353,15 +393,27 @@ Scope {
         }
     }
 
-    property Connections playersConnection: Connections {
-        target: Mpris.Mpris
-        function onPlayersChanged() {
-            root.onPlayersChanged();
+    property Connections playerModelConnection: Connections {
+        target: Mpris.Mpris.players
+        function onObjectInsertedPost() {
+            root._onPlayerConnected(arguments[0]);
+        }
+        function onObjectRemovedPost() {
+            root._onPlayerDisconnected(arguments[0]);
+        }
+    }
+
+    FrameAnimation {
+        running: root.activePlayer?.playbackState === Mpris.MprisPlaybackState.Playing
+        onTriggered: {
+            if (root.activePlayer) {
+                root.activePlayer.positionChanged();
+            }
         }
     }
 
     Component.onCompleted: {
-        root.onPlayersChanged();
+        root._initPlayers();
         Services.PanelExclusivityService.registerPanel(root.panelId, root);
     }
 
