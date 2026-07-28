@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import Quickshell
 
 import "../../config" as Config
@@ -183,42 +184,61 @@ PanelWindow {
                         color: TTheme.Palette.color("base")
                     }
 
-                    Rectangle {
-                        id: trackFill
+                    Item {
+                        id: trackContent
+                        anchors.fill: parent
+                        visible: false
 
-                        anchors.left: trackBackground.left
-                        anchors.verticalCenter: trackBackground.verticalCenter
-                        height: trackBackground.height
-                        radius: trackBackground.radius
-                        width: trackBackground.width * root.normalizedLevel
-                        color: TTheme.Palette.color("c4")
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: root.trackHeight
+                            radius: root.trackHeight / 2
+                            width: parent.width * root.normalizedLevel
+                            color: TTheme.Palette.color("c4")
 
-                        Behavior on width {
-                            enabled: !root.interacting
-                            Anim {
-                                durationMs: Config.Motion.mediumDuration
-                                curve: Config.Motion.standardCurve
+                            Behavior on width {
+                                enabled: !root.interacting
+                                Anim {
+                                    durationMs: Config.Motion.mediumDuration
+                                    curve: Config.Motion.standardCurve
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            width: root.thumbSize
+                            height: root.thumbSize
+                            radius: width / 2
+                            color: TTheme.Palette.color("c4")
+                            anchors.verticalCenter: parent.verticalCenter
+                            x: parent.width * root.normalizedLevel - width / 2
+
+                            Behavior on x {
+                                enabled: !root.interacting
+                                Anim {
+                                    durationMs: Config.Motion.mediumDuration
+                                    curve: Config.Motion.standardCurve
+                                }
                             }
                         }
                     }
 
                     Rectangle {
-                        id: thumb
+                        id: trackMask
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: root.trackHeight
+                        radius: height / 2
+                        color: "black"
+                        visible: false
+                    }
 
-                        width: root.thumbSize
-                        height: root.thumbSize
-                        radius: width / 2
-                        color: TTheme.Palette.color("c4")
-                        anchors.verticalCenter: trackBackground.verticalCenter
-                        x: trackBackground.x + trackBackground.width * root.normalizedLevel - width / 2
-
-                        Behavior on x {
-                            enabled: !root.interacting
-                            Anim {
-                                durationMs: Config.Motion.mediumDuration
-                                curve: Config.Motion.standardCurve
-                            }
-                        }
+                    OpacityMask {
+                        anchors.fill: parent
+                        source: trackContent
+                        maskSource: trackMask
                     }
 
                     MouseArea {

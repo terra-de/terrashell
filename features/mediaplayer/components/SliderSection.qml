@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import Quickshell.Services.Pipewire
 
 import "../../../config" as Config
@@ -79,6 +80,12 @@ Item {
             anchors.fill: parent
             radius: height / 2
             color: TTheme.Palette.color("high")
+        }
+
+        Item {
+            id: contentItem
+            anchors.fill: parent
+            visible: false
 
             Rectangle {
                 anchors.top: parent.top
@@ -106,31 +113,45 @@ Item {
                 font.pixelSize: root.iconSize
                 color: TTheme.Palette.color("standard")
             }
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
+        Rectangle {
+            id: pillMask
+            anchors.fill: parent
+            radius: height / 2
+            color: "black"
+            visible: false
+        }
 
-                function posToValue(mouse) {
-                    return Math.max(0, Math.min(1, mouse.x / width));
-                }
+        OpacityMask {
+            anchors.fill: parent
+            source: contentItem
+            maskSource: pillMask
+        }
 
-                onPressed: mouse => {
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+
+            function posToValue(mouse) {
+                return Math.max(0, Math.min(1, mouse.x / width));
+            }
+
+            onPressed: mouse => {
+                root.userInteraction();
+                sliderBar.levelSet(posToValue(mouse));
+            }
+
+            onPositionChanged: mouse => {
+                if (pressed) {
                     root.userInteraction();
                     sliderBar.levelSet(posToValue(mouse));
                 }
+            }
 
-                onPositionChanged: mouse => {
-                    if (pressed) {
-                        root.userInteraction();
-                        sliderBar.levelSet(posToValue(mouse));
-                    }
-                }
-
-                onClicked: mouse => {
-                    root.userInteraction();
-                    sliderBar.levelSet(posToValue(mouse));
-                }
+            onClicked: mouse => {
+                root.userInteraction();
+                sliderBar.levelSet(posToValue(mouse));
             }
         }
     }
