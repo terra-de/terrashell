@@ -27,6 +27,7 @@ QtObject {
     }
 
     function openSlidersOnly() {
+        if (root.open && !root.sliderOnly) return;
         root.open = true;
         root.sliderOnly = true;
         root.sliderTriggerCount++;
