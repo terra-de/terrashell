@@ -17,7 +17,7 @@ Item {
         anchors.fill: parent
         radius: Config.Appearance.radiusMedium
         color: TTheme.Palette.color("high")
-        visible: artImage.status !== Image.Ready
+        visible: !artImage.visible
 
         Text {
             anchors.centerIn: parent
@@ -43,7 +43,6 @@ Item {
             sourceSize.width: root.artworkSize
             sourceSize.height: root.artworkSize
             fillMode: Image.PreserveAspectCrop
-            asynchronous: true
         }
     }
 
@@ -53,6 +52,6 @@ Item {
         color: "transparent"
         border.color: TTheme.Palette.color("outline")
         border.width: 1
-        visible: artImage.status === Image.Ready
+        visible: artImage.visible
     }
 }
