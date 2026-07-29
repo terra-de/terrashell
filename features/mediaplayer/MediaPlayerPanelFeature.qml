@@ -145,7 +145,6 @@ Primitives.SlideOutPanelWindow {
                                 artUrl: Services.MediaPlayerService.trackArtUrl
                                 artworkSize: 160
                                 Layout.alignment: Qt.AlignVCenter
-                                Layout.alignment: Qt.AlignVCenter
                             }
                         }
                     }
