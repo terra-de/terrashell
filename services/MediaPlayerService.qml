@@ -17,19 +17,19 @@ Scope {
     property var players: []
 
     property Mpris.MprisPlayer activePlayer: null
-    property string trackTitle: root.activePlayer?.trackTitle ?? ""
-    property string trackArtist: root.activePlayer?.trackArtist ?? ""
-    property string trackAlbum: root.activePlayer?.trackAlbum ?? ""
-    property string trackArtUrl: root.activePlayer?.trackArtUrl ?? ""
-    property double position: root.activePlayer?.position ?? 0
-    property double length: root.activePlayer?.length ?? 0
-    property double volume: root.activePlayer?.volume ?? 0
-    property bool canGoNext: root.activePlayer?.canGoNext ?? false
-    property bool canGoPrevious: root.activePlayer?.canGoPrevious ?? false
-    property bool canSeek: root.activePlayer?.canSeek ?? false
-    property bool canPlay: root.activePlayer?.canPlay ?? false
-    property bool canPause: root.activePlayer?.canPause ?? false
-    property int playbackState: root.activePlayer?.playbackState ?? Mpris.MprisPlaybackState.Stopped
+    property string trackTitle: root.activePlayer ? root.activePlayer.trackTitle : ""
+    property string trackArtist: root.activePlayer ? root.activePlayer.trackArtist : ""
+    property string trackAlbum: root.activePlayer ? root.activePlayer.trackAlbum : ""
+    property string trackArtUrl: root.activePlayer ? root.activePlayer.trackArtUrl : ""
+    property double position: root.activePlayer ? root.activePlayer.position : 0
+    property double length: root.activePlayer ? root.activePlayer.length : 0
+    property double volume: root.activePlayer ? root.activePlayer.volume : 0
+    property bool canGoNext: root.activePlayer ? root.activePlayer.canGoNext : false
+    property bool canGoPrevious: root.activePlayer ? root.activePlayer.canGoPrevious : false
+    property bool canSeek: root.activePlayer ? root.activePlayer.canSeek : false
+    property bool canPlay: root.activePlayer ? root.activePlayer.canPlay : false
+    property bool canPause: root.activePlayer ? root.activePlayer.canPause : false
+    property int playbackState: root.activePlayer ? root.activePlayer.playbackState : Mpris.MprisPlaybackState.Stopped
     readonly property bool isPlaying: root.playbackState === Mpris.MprisPlaybackState.Playing
     readonly property bool hasActivePlayer: root.activePlayer !== null
     readonly property double volumeLevel: Pipewire?.defaultAudioSink?.audio?.volume ?? 0
@@ -168,55 +168,35 @@ Scope {
     }
 
     function togglePlaying() {
-        if (root.activePlayer?.canTogglePlaying) {
-            root.activePlayer.togglePlaying();
-        } else if (root.activePlayer?.canPlay && !root.isPlaying) {
-            root.activePlayer.play();
-        } else if (root.activePlayer?.canPause && root.isPlaying) {
-            root.activePlayer.pause();
-        }
+        root.activePlayer?.togglePlaying();
     }
 
     function play() {
-        if (root.activePlayer?.canPlay) {
-            root.activePlayer.play();
-        }
+        root.activePlayer?.play();
     }
 
     function pause() {
-        if (root.activePlayer?.canPause) {
-            root.activePlayer.pause();
-        }
+        root.activePlayer?.pause();
     }
 
     function next() {
-        if (root.activePlayer?.canGoNext) {
-            root.activePlayer.next();
-        }
+        root.activePlayer?.next();
     }
 
     function previous() {
-        if (root.activePlayer?.canGoPrevious) {
-            root.activePlayer.previous();
-        }
+        root.activePlayer?.previous();
     }
 
     function seek(offsetMs) {
-        if (root.activePlayer?.canSeek) {
-            root.activePlayer.seek(offsetMs / 1000);
-        }
+        root.activePlayer?.seek(offsetMs / 1000);
     }
 
     function setPosition(pos) {
-        if (root.activePlayer?.canSeek && root.activePlayer?.positionSupported) {
-            root.activePlayer.position = pos;
-        }
+        if (root.activePlayer) root.activePlayer.position = pos;
     }
 
     function setVolume(vol) {
-        if (root.activePlayer?.volumeSupported) {
-            root.activePlayer.volume = Math.max(0, Math.min(1, vol));
-        }
+        if (root.activePlayer) root.activePlayer.volume = Math.max(0, Math.min(1, vol));
     }
 
     function connectToPlayer(player) {
@@ -305,35 +285,9 @@ Scope {
 
     function _switchActivePlayer(player) {
         root.activePlayer = player;
-        root.trackTitle = player?.trackTitle ?? "";
-        root.trackArtist = player?.trackArtist ?? "";
-        root.trackAlbum = player?.trackAlbum ?? "";
-        root.trackArtUrl = player?.trackArtUrl ?? "";
-        root.position = player?.position ?? 0;
-        root.length = player?.length ?? 0;
-        root.volume = player?.volume ?? 0;
-        root.canGoNext = player?.canGoNext ?? false;
-        root.canGoPrevious = player?.canGoPrevious ?? false;
-        root.canSeek = player?.canSeek ?? false;
-        root.canPlay = player?.canPlay ?? false;
-        root.canPause = player?.canPause ?? false;
-        root.playbackState = player?.playbackState ?? Mpris.MprisPlaybackState.Stopped;
     }
 
     function _clearActivePlayerProps() {
-        root.trackTitle = "";
-        root.trackArtist = "";
-        root.trackAlbum = "";
-        root.trackArtUrl = "";
-        root.position = 0;
-        root.length = 0;
-        root.volume = 0;
-        root.canGoNext = false;
-        root.canGoPrevious = false;
-        root.canSeek = false;
-        root.canPlay = false;
-        root.canPause = false;
-        root.playbackState = Mpris.MprisPlaybackState.Stopped;
     }
 
     property bool _volumeTracked: false
@@ -403,8 +357,10 @@ Scope {
         }
     }
 
-    FrameAnimation {
-        running: root.activePlayer?.playbackState === Mpris.MprisPlaybackState.Playing
+    property Timer _positionTimer: Timer {
+        interval: 200
+        repeat: true
+        running: root.activePlayer ? root.activePlayer.playbackState === Mpris.MprisPlaybackState.Playing : false
         onTriggered: {
             if (root.activePlayer) {
                 root.activePlayer.positionChanged();
